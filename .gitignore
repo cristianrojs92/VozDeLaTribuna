@@ -125,7 +125,3 @@ dmypy.json
 
 # Cython debug symbols
 cython_debug/
-
-# Specific .env files if not covered by the global .env rule
-producers/youtube_producer/.env
-processors/comment_processor/.env 
