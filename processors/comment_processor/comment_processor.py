@@ -14,6 +14,79 @@ logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
 
+# --- Diccionarios para Análisis de Sentimiento MVP ---
+DICCIONARIO_POSITIVAS_MVP = {
+    # Festejo y Alegría General
+    "gol": 1.0, "gool": 1.0, "goool": 1.0, "golazo": 1.8, "golazooo": 1.8, "victoria": 1.5,
+    "ganamos": 1.4, "ganar": 1.2, "triunfo": 1.5, "partidazo": 1.6, "alegria": 1.0, "felicidad": 1.0,
+    "festejo": 0.9, "que grande": 1.2, "qué grande": 1.2, "que bueno": 1.1, "qué bueno": 1.1,
+    "buenisimo": 1.3, "buenísima": 1.3, "joya": 1.0, "espectacular": 1.5, "impresionante": 1.6,
+    "épico": 1.7, "epico": 1.7,
+    # Elogios a Jugadores/Equipo
+    "crack": 1.7, "genio": 1.6, "figura": 1.5, "idolo": 1.6, "ídolo": 1.6, "maestro": 1.4,
+    "jugadorazo": 1.7, "equipazo": 1.6, "la rompio": 1.5, "la rompió": 1.5, "se paso": 1.4,
+    "se pasó": 1.4, "te pusiste la 10": 2.0, "pusiste la 10": 2.0, "jugador": 0.5,
+    "maquina": 1.3, "máquina": 1.3, "bestia": 1.4, "mostro": 1.3, "monstruo": 1.3,
+    # Apoyo y Ánimo
+    "vamos": 0.8, "vamooos": 0.8, "vamo": 0.8, "dale": 0.7, "dalee": 0.7, "aguante": 0.9,
+    "fuerza": 0.6, "con todo": 0.8, "a full": 0.7, "huevo": 1.0, "huevos": 1.0,
+    "pongan huevo": 0.8,
+    # Buen Rendimiento o Calidad
+    "bien": 0.9, "muy bien": 1.2, "excelente": 1.5, "buen partido": 1.1, "buena jugada": 1.0,
+    "calidad": 1.2, "jugaron bien": 1.1, "agrandado": 0.7, "comerse la cancha": 1.6,
+    "mortal": 1.4, "que jugador": 1.5, "qué jugador": 1.5, "que gol": 1.3, "qué gol": 1.3,
+    "merecido": 1.0, "justicia": 0.8,
+    # Emojis Positivos
+    "👍": 1.0, "❤️": 1.2, "🎉": 1.1, "😂": 0.7, "👏": 0.9, "🔥": 1.3, "⚽": 0.5,
+    "🏆": 1.4, "💪": 0.8, "💯": 1.2, "🤩": 1.3, "🥳": 1.1,
+    # Nuevas adiciones basadas en análisis de comentarios
+    "ufff": 0.7, "uf": 0.7, "uff": 0.7, "god": 1.8, "goddd": 1.8, "joyita": 1.1,
+    "claro": 0.6, "claro que si": 0.7, "obvio": 0.6, "banco": 1.2, "te banco": 1.3,
+    "bancan": 1.2, "🤑": 1.0, "sacalaaa": 0.9
+}
+
+DICCIONARIO_NEGATIVAS_MVP = {
+    # Decepción, Enojo, Crítica General
+    "desastre": -1.5, "horrible": -1.4, "mal": -0.8, "malo": -1.0, "malos": -1.0,
+    "malísimo": -1.3, "malisimo": -1.3, "pésimo": -1.4, "pesimo": -1.4, "decepcion": -1.2,
+    "decepción": -1.2, "frustrante": -1.1, "que mal": -1.0, "qué mal": -1.0,
+    "mamita querida": -0.9, "no puede ser": -0.8, "asi no": -0.9, "así no": -0.9,
+    "para el olvido": -1.2, "verguenza": -1.5, "vergüenza": -1.5, "lamentable": -1.3,
+    "desilusion": -1.1, "desilusión": -1.1, "bronca": -1.0, "caliente": -0.9, "calentura": -1.0,
+    # Insultos/Críticas a Jugadores/Equipo
+    "burro": -1.3, "muerto": -1.6, "muertos": -1.6, "perro": -1.4, "tronco": -1.5,
+    "paquete": -1.5, "pecho frio": -1.8, "pechofrío": -1.8, "pechos frios": -1.8,
+    "pechosfríos": -1.8, "patadura": -1.2, "equipo chico": -1.0, "no juegan a nada": -1.4,
+    "son un desastre": -1.3, "morfón": -1.6, "morfon": -1.6, "cagon": -1.7, "cagón": -1.7,
+    "vendehumo": -1.5, "chambon": -1.2, "chambón": -1.2, "fantasma": -1.1, "impresentable": -1.4,
+    "desaparecido": -1.0, "horribles": -1.4, "asco": -1.6, "dan asco": -1.7,
+    "muerto de hambre": -1.5,
+    # Insultos Fuertes / Agresión (comunes en chat)
+    "la concha de tu madre": -2.0, "lcdtm": -2.0, "hijo de puta": -1.9, "hdp": -1.9,
+    "forro": -1.7, "pelotudo": -1.6, "boludo": -1.0, "andate a la mierda": -1.8,
+    "puto": -1.8, "orto": -1.5, "culo roto": -1.7,
+    # Críticas al Arbitraje / Juego Sucio
+    "robo": -1.7, "afano": -1.7, "ladron": -1.6, "ladrón": -1.6, "chorro": -1.6,
+    "comprado": -1.5, "penalazo no cobrado": -1.3, "era roja": -1.1, "cobra bien": -0.5,
+    "referi horrible": -1.4, "árbitro horrible": -1.4, "mal arbitraje": -1.3,
+    "nos robaron": -1.7, "nos cagaron": -1.7, "cagaron": -1.7,
+    # Mal Rendimiento
+    "mal rendimiento": -1.0, "no corren": -1.2, "se arrastran": -1.3, "erro solo": -1.1,
+    "erró solo": -1.1, "se comio un gol": -1.3, "se comió un gol": -1.3,
+    "colgarse del travesaño": -0.8, "cascotear el rancho": -0.5, "cerrarse el arco": -0.7,
+    "no patean al arco": -1.1, "sin ideas": -1.0, "falta actitud": -1.2, "baja el nivel": -0.9,
+    # Emojis Negativos
+    "👎": -1.0, "😠": -1.2, "🤦": -0.9, "💩": -1.5, "😤": -1.1, "😡": -1.3, "🥶": -1.0,
+    "��": -0.8, "🙄": -0.7,
+    # Nuevas adiciones basadas en análisis de comentarios
+    "malisimo lcdtm": -2.2, "ni ganas": -0.9, "humo": -1.3, "un kilo": -1.4,
+    "afk": -0.8, "bodrio": -1.2, "😐": -0.4, "😑": -0.4
+}
+
+PALABRAS_NEGACION_MVP = [
+    "no", "ni", "nunca", "jamas", "jamás", "tampoco", "sin", "nadie"
+]
+
 # --- Configuración --- (Nombres de variables en inglés)
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
@@ -61,9 +134,109 @@ def clean_text(input_text):
     if not isinstance(input_text, str):
         return "" # Devolver cadena vacía si no es string
     text = input_text.lower() # Convertir a minúsculas
-    text = re.sub(r'\s+', ' ', text).strip() # Reemplazar múltiples espacios con uno solo y quitar espacios al inicio/final
+    text = re.sub(r'\\s+', ' ', text).strip() # Reemplazar múltiples espacios con uno solo y quitar espacios al inicio/final
     # Aquí se podrían añadir más reglas de limpieza (ej. remover emojis, URLs, etc.)
     return text
+
+def analyze_sentiment_mvp(text_to_analyze):
+    """
+    Analiza el sentimiento de un texto usando diccionarios de palabras clave y manejo básico de negaciones.
+    Prioriza frases más largas sobre palabras individuales.
+    """
+    if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
+        return {"label": "neutral", "score": 0.0}
+
+    text_lower = text_to_analyze.lower() # Normalizar a minúsculas una vez
+    total_score = 0.0
+    
+    # Combinar diccionarios y ordenar por longitud de clave (descendente) para priorizar frases
+    # Esto es crucial para que "no puede ser" se detecte antes que "no" o "puede" o "ser" individualmente.
+    # Los emojis suelen ser de longitud 1, por lo que se procesarán después de frases más largas.
+    
+    # Pre-procesar diccionarios para tener una lista única de tuplas (frase, score)
+    # y ordenarla por longitud de la frase, de más larga a más corta.
+    # Esto asegura que "no puede ser" se revise antes que "puede ser" o "no".
+    
+    sentiment_terms = []
+    for term, score in DICCIONARIO_POSITIVAS_MVP.items():
+        sentiment_terms.append((term.lower(), score))
+    for term, score in DICCIONARIO_NEGATIVAS_MVP.items():
+        sentiment_terms.append((term.lower(), score))
+    
+    # Ordenar por longitud de la frase (clave[0]) de forma descendente
+    sentiment_terms.sort(key=lambda x: len(x[0]), reverse=True)
+
+    # Para el manejo de negaciones, dividimos el texto en "palabras" para chequear la anterior.
+    # Una tokenización simple es suficiente para este propósito en el MVP.
+    # Es importante notar que la búsqueda de frases se hace sobre `text_lower` completo.
+    # La tokenización aquí es solo para el contexto de negación.
+    words_for_negation_check = text_lower.split()
+    
+    # Iterar sobre el texto buscando los términos del diccionario
+    # Para evitar contar múltiples veces la misma sección de texto si hay solapamientos
+    # y para manejar correctamente la negación, este bucle es más complejo.
+    # Enfoque MVP simplificado: buscar cada término y si se encuentra, añadir su score.
+    # Este enfoque no maneja bien solapamientos complejos ni negaciones de frases largas perfectamente,
+    # pero es un punto de partida para el MVP.
+
+    processed_text = text_lower # Hacemos una copia para ir "consumiendo" las partes procesadas
+    
+    for term, score in sentiment_terms:
+        term_len = len(term)
+        # Buscar todas las ocurrencias no solapadas del término
+        start_index = 0
+        while start_index < len(processed_text):
+            found_pos = processed_text.find(term, start_index)
+            if found_pos == -1: # No más ocurrencias de este término
+                break
+
+            # Verificar negación (simplificado para MVP)
+            # Buscar la palabra que precede inmediatamente al término encontrado.
+            # Esto es una aproximación. Una negación puede estar más lejos o ser más compleja.
+            negation_multiplier = 1.0
+            # Encontrar la "palabra" que precede a `found_pos` en el texto original tokenizado
+            # Esto es heurístico y puede no ser perfecto.
+            # Ejemplo: "yo no creo que sea muy bueno". "bueno" está negado por "no".
+            # Si el término es una frase, como "muy bueno", necesitamos ser más cuidadosos.
+            
+            # Heurística simple para negación: buscar una palabra de negación en una ventana pequeña antes del término.
+            # Considerar las 2 palabras antes del inicio del término encontrado.
+            # Se busca en `text_lower` original, no en `processed_text` que se modifica.
+            preceding_text_window_start = max(0, found_pos - (max(len(w) for w in PALABRAS_NEGACION_MVP) + len(term) + 5)) # Ventana antes
+            preceding_text_for_negation = text_lower[preceding_text_window_start:found_pos]
+            
+            # Dividir esta ventana en palabras y chequear las últimas (ej. 2 palabras)
+            potential_negators = preceding_text_for_negation.split()
+            if len(potential_negators) > 0:
+                # Chequear la última o las dos últimas palabras en la ventana
+                words_to_check_for_negation = potential_negators[-2:] # Tomar las últimas dos palabras
+                for neg_word in PALABRAS_NEGACION_MVP:
+                    if neg_word in words_to_check_for_negation:
+                        # Si encontramos una palabra de negación cerca y antes del término.
+                        # Cuidado: esto podría negar incorrectamente si hay estructuras complejas.
+                        # ej: "no es malo, es bueno". "bueno" no debería ser negado aquí por el "no" anterior.
+                        # Para el MVP, asumimos una negación simple si está cerca y antes.
+                        negation_multiplier = -1.0
+                        break # Encontramos una negación, no necesitamos seguir buscando en esta ventana.
+            
+            total_score += score * negation_multiplier
+            
+            # "Consumir" el término encontrado para evitar re-procesarlo con términos más cortos o solapados.
+            # Reemplazamos el término con espacios para mantener longitudes y posiciones relativas
+            # para futuros `find` en esta iteración, aunque es una simplificación.
+            processed_text = processed_text[:found_pos] + (' ' * term_len) + processed_text[found_pos + term_len:]
+            start_index = found_pos + term_len # Continuar la búsqueda después de este término
+
+    # Determinar etiqueta basada en el score total
+    # Ajustar umbrales si es necesario
+    if total_score > 0.15: # Umbral ligeramente > 0 para ser positivo
+        label = "positive"
+    elif total_score < -0.15: # Umbral ligeramente < 0 para ser negativo
+        label = "negative"
+    else:
+        label = "neutral"
+        
+    return {"label": label, "score": round(total_score, 2)}
 
 def process_message(message_id, message_data):
     """Procesa un único mensaje del stream: deserializa, valida y enriquece."""
@@ -87,7 +260,13 @@ def process_message(message_id, message_data):
         comment_dict["processing_timestamp_utc"] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
         comment_dict["cleaned_text"] = clean_text(comment_dict.get("original_text"))
         
-        # Aquí se añadirían más pasos de enriquecimiento en el futuro (sentimiento, NER, etc.)
+        # --- Análisis de Sentimiento MVP ---
+        if comment_dict["cleaned_text"]: # Solo analizar si hay texto limpio
+            sentiment_result = analyze_sentiment_mvp(comment_dict["cleaned_text"])
+            comment_dict["sentiment_analysis"] = sentiment_result
+        else:
+            comment_dict["sentiment_analysis"] = {"label": "neutral", "score": 0.0} # Default si no hay texto
+        # --- Fin Análisis de Sentimiento ---
 
         logging.info(f"Successfully processed message {message_id} (internal_id: {comment_dict['internal_comment_id']})")
         return comment_dict
