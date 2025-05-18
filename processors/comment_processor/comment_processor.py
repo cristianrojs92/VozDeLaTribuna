@@ -87,6 +87,92 @@ PALABRAS_NEGACION_MVP = [
     "no", "ni", "nunca", "jamas", "jamás", "tampoco", "sin", "nadie"
 ]
 
+# --- Diccionario para Detección de Equipos MVP ---
+EQUIPOS_MVP = {
+    "River Plate": ["river", "millo", "millonarios", "gallina", "gallinas", "la banda", "el más grande", "carp"],
+    "Boca Juniors": ["boca", "xeneize", "bostero", "bosteros", "azul y oro", "la mitad más uno", "cabj"],
+    "Independiente": ["independiente", "el rojo", "diablos rojos", "rey de copas", "orgullo nacional", "independiente de américa"],
+    "Racing Club": ["racing", "la academia", "el primer grande"],
+    "San Lorenzo de Almagro": ["san lorenzo", "ciclón", "cuervo", "los cuervos", "santos", "azulgrana", "matadores", "gauchos de boedo", "el gigante de boedo"],
+    "Club Atlético Güemes": ["güemes", "club atlético güemes", "gauchos azulgranas", "los gauchos", "azulgranas", "guemes"],
+    "Quilmes Atlético Club": ["quilmes", "quilmes atlético club", "el cervecero", "cervecero", "los cerveceros", "decano", "qac"],
+    "Estudiantes de La Plata": ["estudiantes", "estudiantes lp", "pincha", "pincharrata", "león"],
+    "Gimnasia y Esgrima La Plata": ["gimnasia", "gimnasia lp", "gelp", "el lobo", "lobo", "tripero", "triperos", "basurero", "mens sana"],
+    "Vélez Sarsfield": ["vélez", "velez", "el fortín", "la v azulada", "fortineros"],
+    "Huracán": ["huracán", "el globo", "globito", "quemero"],
+    "Newell's Old Boys": ["newell's", "newells", "nob", "la lepra", "leprosos"],
+    "Rosario Central": ["rosario central", "central", "canalla", "canayas", "la academia rosarina", "auriazul", "los auriazules"],
+    "Lanús": ["lanús", "lanus", "granate", "los globetrotters", "los albañiles"],
+    "Banfield": ["banfield", "el taladro", "la banda del sur"],
+    "Argentinos Juniors": ["argentinos juniors", "argentinos", "aaaj", "el bicho", "bichitos colorados", "semillero del mundo", "tifón de boyacá", "criollos"],
+    "Talleres de Córdoba": ["talleres", "talleres cba", "la t", "matador", "albiazul"],
+    "Belgrano de Córdoba": ["belgrano", "belgrano cba", "pirata", "celeste", "la b", "los de alberdi"],
+    "Colón de Santa Fe": ["colón", "colon", "sabalero", "sabalé", "rojinegro", "negro", "raza"],
+    "Unión de Santa Fe": ["unión", "union", "tatengue", "el tate", "rojiblanco", "club de la avenida"],
+    "Defensa y Justicia": ["defensa y justicia", "dyj", "el halcón", "halcón"],
+    "Atlético Tucumán": ["atlético tucumán", "decano", "pituco", "el gigante del norte"],
+    "Godoy Cruz Antonio Tomba": ["godoy cruz", "tomba", "bodeguero"],
+    "Sarmiento de Junín": ["sarmiento", "sarmiento de junín", "el verde", "verdolaga", "guerrero"],
+    "Platense": ["platense", "calamar", "marrón"],
+    "Barracas Central": ["barracas central", "guapo"],
+    "Central Córdoba (Santiago del Estero)": ["central córdoba sde", "central córdoba", "ferroviario"],
+    "Instituto Atlético Central Córdoba": ["instituto", "la gloria", "albirrojo"],
+    "Deportivo Riestra": ["riestra", "deportivo riestra", "malevo", "blanquinegro", "los malevos de pompeya"],
+    "Independiente Rivadavia": ["independiente rivadavia", "la lepra mendocina", "azul del parque"],
+    "Aldosivi": ["aldosivi", "tiburón", "el más grande de la costa atlántica", "equipo de la ciudad"],
+    "San Martín (San Juan)": ["san martín sj", "san martín de san juan", "santo", "verdinegro", "la banda del pueblo viejo"],
+    "San Martín (Tucumán)": ["san martín tucumán", "san martín de tucumán", "santo tucumano", "ciruja"],
+    "Agropecuario Argentino": ["agropecuario", "sojero"],
+    "All Boys": ["all boys", "albo"],
+    "Almagro": ["almagro", "tricolor"],
+    "Almirante Brown": ["almirante brown", "la fragata", "mirasol"],
+    "Alvarado": ["alvarado", "torito"],
+    "Arsenal Fútbol Club": ["arsenal", "el arse", "los del viaducto"],
+    "Atlanta": ["atlanta", "bohemio"],
+    "Chacarita Juniors": ["chacarita", "funebrero"],
+    "Chaco For Ever": ["chaco for ever", "el negro"],
+    "Colegiales": ["colegiales", "tricolor de munro"],
+    "Defensores de Belgrano": ["defensores de belgrano", "defensores", "el dragón"],
+    "Defensores Unidos": ["defensores unidos", "cadu", "celeste"],
+    "Deportivo Madryn": ["deportivo madryn", "el aurinegro"],
+    "Deportivo Maipú": ["deportivo maipú", "cruzado", "botellero"],
+    "Deportivo Morón": ["morón", "deportivo morón", "el gallo"],
+    "Estudiantes (Buenos Aires)": ["estudiantes ba", "estudiantes de caseros", "pincha de caseros", "matador"],
+    "Estudiantes (Río Cuarto)": ["estudiantes río cuarto", "celeste", "león del imperio"],
+    "Ferro Carril Oeste": ["ferro", "verdolaga", "oeste"],
+    "Gimnasia y Esgrima (Jujuy)": ["gimnasia de jujuy", "lobo jujeño"],
+    "Gimnasia y Esgrima (Mendoza)": ["gimnasia de mendoza", "lobo del parque", "mensana", "pituco"],
+    "Gimnasia y Tiro (Salta)": ["gimnasia y tiro", "albo", "millonario"],
+    "Los Andes": ["los andes", "milrayitas"],
+    "Mitre (Santiago del Estero)": ["mitre sde", "aurinegro"],
+    "Nueva Chicago": ["nueva chicago", "chicago", "torito", "torito de mataderos", "verdinegro"],
+    "Patronato": ["patronato", "patrón", "rojinegro", "santo"],
+    "Racing (Córdoba)": ["racing de córdoba", "la academia cordobesa", "nueva italia"],
+    "San Miguel": ["san miguel", "el trueno verde"],
+    "San Telmo": ["san telmo", "candombero"],
+    "Talleres (Remedios de Escalada)": ["talleres re", "el tallarín", "rojiblanco"],
+    "Temperley": ["temperley", "gasolero", "celeste"],
+    "Tristán Suárez": ["tristán suárez", "lechero"],
+    "Brown de Adrogué": ["brown de adrogué", "tricolor"],
+    "Argentino de Quilmes": ["argentino de quilmes", "mate"],
+    "Villa Dálmine": ["villa dálmine", "el viola", "violeta"],
+    "Sportivo Italiano": ["sportivo italiano", "azzurro", "tano"],
+    "Sacachispas": ["sacachispas", "lila"],
+    "Flandria": ["flandria", "canario"],
+    "Comunicaciones": ["comunicaciones", "cartero"],
+    "Cipolletti": ["cipolletti", "albinegro", "capataz de la patagonia"],
+    "Olimpo": ["olimpo", "aurinegro"],
+    "Juventud Antoniana": ["juventud antoniana", "santo salteño"],
+    "Villa Mitre (Bahía Blanca)": ["villa mitre", "tricolor", "villero"],
+    "Argentino de Rosario": ["argentino de rosario", "salaíto"],
+    "Berazategui": ["berazategui", "naranja", "el bera"],
+    "Central Córdoba (Rosario)": ["central córdoba rosario", "charrúa"],
+    "Claypole": ["claypole", "tambero"],
+    "Deportivo Español": ["deportivo español", "gallego"],
+    "Ituzaingó": ["ituzaingó", "león verde", "el verde"],
+    "Luján": ["luján", "lujanero"]
+}
+
 # --- Configuración --- (Nombres de variables en inglés)
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
 REDIS_PORT = int(os.getenv('REDIS_PORT', 6379))
@@ -238,6 +324,44 @@ def analyze_sentiment_mvp(text_to_analyze):
         
     return {"label": label, "score": round(total_score, 2)}
 
+def detect_mentioned_teams_mvp(text_to_analyze, equipos_dict):
+    """
+    Detecta equipos mencionados en un texto usando un diccionario de equipos y sus alias.
+    Devuelve una lista de nombres canónicos de equipos encontrados.
+    La búsqueda de alias es case-insensitive y busca coincidencias como palabras completas.
+    """
+    if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
+        return []
+    if not equipos_dict:
+        return []
+
+    text_lower = text_to_analyze.lower()
+    found_teams_canonical_names = set()
+
+    # Ordenar los equipos por el alias más largo primero puede ayudar a evitar
+    # que un alias corto (ej. "river") enmascare uno más largo (ej. "river plate").
+    # Pero la lógica interna de los alias ya debería ser ordenada por longitud si es necesario.
+    # Para este MVP, iteramos tal cual y confiamos en una buena definición de alias.
+
+    for canonical_name, aliases in equipos_dict.items():
+        for alias in aliases:
+            alias_lower = alias.lower()
+            # Usar expresiones regulares para buscar el alias como palabra completa
+            # re.escape maneja caracteres especiales en el alias si los hubiera
+            try:
+                #  asegura que estamos buscando palabras completas
+                # Ejemplo: si alias es "river", no coincidirá con "driver"
+                pattern = r'\b' + re.escape(alias_lower) + r'\b'
+                if re.search(pattern, text_lower):
+                    found_teams_canonical_names.add(canonical_name)
+                    break # Si encontramos un alias para este equipo, pasamos al siguiente equipo canónico
+            except re.error as e:
+                logging.warning(f"Regex error for alias '{alias_lower}' of team '{canonical_name}': {e}")
+                # Continuar con el siguiente alias si hay un error de regex con el actual
+                continue
+                
+    return list(found_teams_canonical_names)
+
 def process_message(message_id, message_data):
     """Procesa un único mensaje del stream: deserializa, valida y enriquece."""
     try:
@@ -267,6 +391,14 @@ def process_message(message_id, message_data):
         else:
             comment_dict["sentiment_analysis"] = {"label": "neutral", "score": 0.0} # Default si no hay texto
         # --- Fin Análisis de Sentimiento ---
+
+        # --- Detección de Equipos MVP ---
+        if comment_dict["cleaned_text"]:
+            mentioned_teams = detect_mentioned_teams_mvp(comment_dict["cleaned_text"], EQUIPOS_MVP)
+            comment_dict["mentioned_teams"] = mentioned_teams
+        else:
+            comment_dict["mentioned_teams"] = [] # Default si no hay texto
+        # --- Fin Detección de Equipos ---
 
         logging.info(f"Successfully processed message {message_id} (internal_id: {comment_dict['internal_comment_id']})")
         return comment_dict
