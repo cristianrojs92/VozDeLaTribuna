@@ -1,0 +1,53 @@
+# Configuración automática de finales de línea para todos los archivos
+* text=auto
+
+# Archivos de Python
+*.py text eol=lf
+*.pyw text eol=lf
+*.pyx text eol=lf
+*.pyd binary
+*.pyo binary
+*.pyc binary
+
+# Archivos de datos
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.csv text eol=lf
+*.tsv text eol=lf
+
+# Archivos de texto y documentación
+*.txt text eol=lf
+*.md text eol=lf
+*.rst text eol=lf
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+
+# Scripts de shell
+*.sh text eol=lf
+*.bash text eol=lf
+*.zsh text eol=lf
+
+# Archivos de configuración
+*.conf text eol=lf
+*.cfg text eol=lf
+*.ini text eol=lf
+*.toml text eol=lf
+.env.example text eol=lf
+
+# Especificar archivos binarios
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.ico binary
+*.pdf binary
+*.zip binary
+*.gz binary
+*.tar binary
+
+# Archivos que deben ser ignorados para la generación de estadísticas de lenguaje de GitHub
+data/dictionaries/* linguist-generated=true
+processors/comment_processor/logs/* linguist-generated=true
+integration_test/output/* linguist-generated=true 

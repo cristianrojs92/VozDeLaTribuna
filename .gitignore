@@ -1,0 +1,106 @@
+# Archivos y directorios de Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Entornos virtuales
+venv/
+ENV/
+env/
+.env
+.venv/
+**/venv/
+
+# Logs y bases de datos
+*.log
+*.log.*
+*.sqlite3
+*.db
+logs/
+**/logs/
+
+# Cache y directorio temporal
+.cache/
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+.nox/
+.coverage.*
+nosetests.xml
+coverage.xml
+*.cover
+
+# Archivos de configuración IDE
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+.spyderproject
+.spyproject
+.ropeproject
+.DS_Store
+
+# Archivos específicos del proyecto
+processors/comment_processor/logs/
+integration_test/output/
+integration_test/test_output/
+*.env
+!.env.example
+**/.env
+!**/.env.example
+
+# Archivos temporales del sistema
+*~
+.*.swp
+.*.swo
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# Archivos de Redis
+*.rdb
+dump.rdb
+redis-data/
+
+# Directorios de datos generados
+generated_data/
+data/output/
+data/temp/
+
+# Scraper output
+scraper-promiedos/output/
+
+# Archivos específicos de entorno local
+*.local
+*.bak
+*.tmp
+
+# Archivos de configuración de sistema
+.directory
+Thumbs.db
+
+# Archivos temporales de oficina
+~$*.docx
+~$*.xlsx
+~$*.pptx
+
+# Archivos de PyCharm
+.idea_modules/ 
