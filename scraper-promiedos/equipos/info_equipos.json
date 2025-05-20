@@ -1,0 +1,1317 @@
+[
+  {
+    "posicion": "1",
+    "nombre": "River",
+    "url": "https://www.promiedos.com.ar/team/river-plate/igi",
+    "nombreCompleto": "River Plate",
+    "proximosPartidos": [
+      {
+        "fecha": "20/05",
+        "rival": "Platense",
+        "hora": "20:30"
+      },
+      {
+        "fecha": "27/05",
+        "rival": "Universitario",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "06/06",
+        "rival": "San Martín (T)",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "17/06",
+        "rival": "Urawa Reds",
+        "hora": "16:00"
+      },
+      {
+        "fecha": "21/06",
+        "rival": "Monterrey",
+        "hora": "22:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "2",
+    "nombre": "Boca Jrs.",
+    "url": "https://www.promiedos.com.ar/team/boca-juniors/igg",
+    "nombreCompleto": "Boca Juniors",
+    "proximosPartidos": [
+      {
+        "fecha": "19/05",
+        "rival": "Independiente",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "07/06",
+        "rival": "Atl. Tucumán",
+        "hora": "11:00"
+      },
+      {
+        "fecha": "16/06",
+        "rival": "Benfica",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "20/06",
+        "rival": "Bayern",
+        "hora": "22:00"
+      },
+      {
+        "fecha": "24/06",
+        "rival": "Auckland City",
+        "hora": "16:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "3",
+    "nombre": "Racing",
+    "url": "https://www.promiedos.com.ar/team/racing-club/ihg",
+    "nombreCompleto": "Racing Club",
+    "proximosPartidos": [
+      {
+        "fecha": "29/05",
+        "rival": "Fortaleza",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "02/06",
+        "rival": "San Martín",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Barracas",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Belgrano",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Estudiantes",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "4",
+    "nombre": "Talleres",
+    "url": "https://www.promiedos.com.ar/team/talleres-cordoba/jche",
+    "nombreCompleto": "Talleres de Córdoba",
+    "proximosPartidos": [
+      {
+        "fecha": "27/05",
+        "rival": "São Paulo",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "San Lorenzo",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Independiente",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Godoy Cruz",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Lanús",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "5",
+    "nombre": "Central",
+    "url": "https://www.promiedos.com.ar/team/rosario-central/ihf",
+    "nombreCompleto": "Rosario Central",
+    "proximosPartidos": [
+      {
+        "fecha": "18/05",
+        "rival": "Huracán",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "08/06",
+        "rival": "Unión",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Godoy Cruz",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Lanús",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "San Martín",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "6",
+    "nombre": "Estudiantes",
+    "url": "https://www.promiedos.com.ar/team/estudiantes-de-la-plata/igh",
+    "nombreCompleto": "Estudiantes de La Plata",
+    "proximosPartidos": [
+      {
+        "fecha": "27/05",
+        "rival": "Carabobo",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "01/06",
+        "rival": "Aldosivi",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "06/07",
+        "rival": "Vélez",
+        "hora": "20:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Unión",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Huracán",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "7",
+    "nombre": "Godoy Cruz",
+    "url": "https://www.promiedos.com.ar/team/godoy-cruz/ihd",
+    "nombreCompleto": "Godoy Cruz",
+    "proximosPartidos": [
+      {
+        "fecha": "29/05",
+        "rival": "Grau",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Central",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Sarmiento",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Talleres",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Gimnasia",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "8",
+    "nombre": "Argentinos",
+    "url": "https://www.promiedos.com.ar/team/argentinos-juniors/ihb",
+    "nombreCompleto": "Argentinos Juniors",
+    "proximosPartidos": [
+      {
+        "fecha": "19/05",
+        "rival": "San Lorenzo",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "07/06",
+        "rival": "Excursionistas",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Boca Jrs.",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Tigre",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Platense",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "9",
+    "nombre": "Independiente",
+    "url": "https://www.promiedos.com.ar/team/independiente/ihe",
+    "nombreCompleto": "Independiente",
+    "proximosPartidos": [
+      {
+        "fecha": "19/05",
+        "rival": "Boca Jrs.",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "28/05",
+        "rival": "Nacional Potosí",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "04/06",
+        "rival": "Gimnasia (M)",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Sarmiento",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Talleres",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "10",
+    "nombre": "Huracán",
+    "url": "https://www.promiedos.com.ar/team/huracan/iie",
+    "nombreCompleto": "Huracán",
+    "proximosPartidos": [
+      {
+        "fecha": "18/05",
+        "rival": "Central",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "27/05",
+        "rival": "Corinthians",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "27/06",
+        "rival": "Instituto",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Belgrano",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Estudiantes",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "11",
+    "nombre": "Vélez",
+    "url": "https://www.promiedos.com.ar/team/velez-sarsfield/ihc",
+    "nombreCompleto": "Vélez Sarsfield",
+    "proximosPartidos": [
+      {
+        "fecha": "21/05",
+        "rival": "Lanús",
+        "hora": "21:10"
+      },
+      {
+        "fecha": "29/05",
+        "rival": "Peñarol",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "06/07",
+        "rival": "Estudiantes",
+        "hora": "20:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Tigre",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Platense",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "12",
+    "nombre": "San Lorenzo",
+    "url": "https://www.promiedos.com.ar/team/san-lorenzo/igf",
+    "nombreCompleto": "San Lorenzo",
+    "proximosPartidos": [
+      {
+        "fecha": "19/05",
+        "rival": "Argentinos",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "04/06",
+        "rival": "Quilmes",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Talleres",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Gimnasia",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "River",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "13",
+    "nombre": "Lanús",
+    "url": "https://www.promiedos.com.ar/team/lanus/igj",
+    "nombreCompleto": "Lanús",
+    "proximosPartidos": [
+      {
+        "fecha": "21/05",
+        "rival": "Vélez",
+        "hora": "21:10"
+      },
+      {
+        "fecha": "27/05",
+        "rival": "Puerto Cabello",
+        "hora": "19:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Riestra",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Central",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Sarmiento",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "14",
+    "nombre": "Defensa",
+    "url": "https://www.promiedos.com.ar/team/defensa-y-justicia/hcbh",
+    "nombreCompleto": "Defensa y Justicia",
+    "proximosPartidos": [
+      {
+        "fecha": "22/05",
+        "rival": "Newell's",
+        "hora": "21:10"
+      },
+      {
+        "fecha": "28/05",
+        "rival": "Cerro Largo",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Banfield",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Aldosivi",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Central Córdoba",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "15",
+    "nombre": "Platense",
+    "url": "https://www.promiedos.com.ar/team/platense/hcah",
+    "nombreCompleto": "Platense",
+    "proximosPartidos": [
+      {
+        "fecha": "20/05",
+        "rival": "River",
+        "hora": "20:30"
+      },
+      {
+        "fecha": "08/06",
+        "rival": "Ind. Rivadavia",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "River",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Vélez",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Argentinos",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "16",
+    "nombre": "Ind. Rivadavia",
+    "url": "https://www.promiedos.com.ar/team/independiente-rivadavia/hcch",
+    "nombreCompleto": "Independiente Rivadavia",
+    "proximosPartidos": [
+      {
+        "fecha": "08/06",
+        "rival": "Platense",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Newell's",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Barracas",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Belgrano",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Estudiantes",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "17",
+    "nombre": "Barracas",
+    "url": "https://www.promiedos.com.ar/team/barracas-central/jafb",
+    "nombreCompleto": "Barracas Central",
+    "proximosPartidos": [
+      {
+        "fecha": "13/07",
+        "rival": "Racing",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Ind. Rivadavia",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Banfield",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Aldosivi",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "17/08",
+        "rival": "Central Córdoba",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "18",
+    "nombre": "Riestra",
+    "url": "https://www.promiedos.com.ar/team/riestra/bbjea",
+    "nombreCompleto": "Deportivo Riestra",
+    "proximosPartidos": [
+      {
+        "fecha": "24/05",
+        "rival": "Armenio",
+        "hora": "11:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Lanús",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "San Martín",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Atl. Tucumán",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Defensa",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "19",
+    "nombre": "Instituto",
+    "url": "https://www.promiedos.com.ar/team/instituto-ac-cordoba/hchc",
+    "nombreCompleto": "Instituto",
+    "proximosPartidos": [
+      {
+        "fecha": "27/06",
+        "rival": "Huracán",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Gimnasia",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "River",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Vélez",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Platense",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "20",
+    "nombre": "Belgrano",
+    "url": "https://www.promiedos.com.ar/team/belgrano/fhid",
+    "nombreCompleto": "Belgrano",
+    "proximosPartidos": [
+      {
+        "fecha": "27/06",
+        "rival": "Defensores",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Huracán",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Racing",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Ind. Rivadavia",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Banfield",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "21",
+    "nombre": "Newell's",
+    "url": "https://www.promiedos.com.ar/team/newell's-old-boys/ihh",
+    "nombreCompleto": "Newell's Old Boys",
+    "proximosPartidos": [
+      {
+        "fecha": "22/05",
+        "rival": "Defensa",
+        "hora": "21:10"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Ind. Rivadavia",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Banfield",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Aldosivi",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Central Córdoba",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "22",
+    "nombre": "Atl. Tucumán",
+    "url": "https://www.promiedos.com.ar/team/atletico-tucuman/gbfc",
+    "nombreCompleto": "Atlético Tucumán",
+    "proximosPartidos": [
+      {
+        "fecha": "07/06",
+        "rival": "Boca Jrs.",
+        "hora": "11:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "San Martín",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Central Córdoba",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Riestra",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Central",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "23",
+    "nombre": "Unión",
+    "url": "https://www.promiedos.com.ar/team/union-santa-fe/hcag",
+    "nombreCompleto": "Unión de Santa Fe",
+    "proximosPartidos": [
+      {
+        "fecha": "28/05",
+        "rival": "Cruzeiro",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "08/06",
+        "rival": "Central",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Estudiantes",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Boca Jrs.",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Tigre",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "24",
+    "nombre": "Tigre",
+    "url": "https://www.promiedos.com.ar/team/tigre/iid",
+    "nombreCompleto": "Tigre",
+    "proximosPartidos": [
+      {
+        "fecha": "15/06",
+        "rival": "Banfield",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Vélez",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Argentinos",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Unión",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Huracán",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "25",
+    "nombre": "Gimnasia",
+    "url": "https://www.promiedos.com.ar/team/gimnasia-y-esgrima-la-plata/iia",
+    "nombreCompleto": "Gimnasia La Plata",
+    "proximosPartidos": [
+      {
+        "fecha": "13/07",
+        "rival": "Instituto",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "San Lorenzo",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Independiente",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Godoy Cruz",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "17/08",
+        "rival": "Lanús",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "26",
+    "nombre": "Central Córdoba",
+    "url": "https://www.promiedos.com.ar/team/central-cordoba-sde/beafh",
+    "nombreCompleto": "Central Córdoba SdE",
+    "proximosPartidos": [
+      {
+        "fecha": "28/05",
+        "rival": "LDU de Quito",
+        "hora": "21:30"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Aldosivi",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Atl. Tucumán",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Defensa",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Newell's",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "27",
+    "nombre": "Banfield",
+    "url": "https://www.promiedos.com.ar/team/banfield/ihi",
+    "nombreCompleto": "Banfield",
+    "proximosPartidos": [
+      {
+        "fecha": "15/06",
+        "rival": "Tigre",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Defensa",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Newell's",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Barracas",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Belgrano",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "28",
+    "nombre": "Sarmiento",
+    "url": "https://www.promiedos.com.ar/team/sarmiento-junin/hbbh",
+    "nombreCompleto": "Sarmiento Junín",
+    "proximosPartidos": [
+      {
+        "fecha": "13/07",
+        "rival": "Independiente",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Godoy Cruz",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Lanús",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "San Martín",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "17/08",
+        "rival": "Atl. Tucumán",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "29",
+    "nombre": "Aldosivi",
+    "url": "https://www.promiedos.com.ar/team/aldosivi/hccd",
+    "nombreCompleto": "Aldosivi",
+    "proximosPartidos": [
+      {
+        "fecha": "01/06",
+        "rival": "Estudiantes",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Central Córdoba",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Defensa",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Newell's",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Barracas",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  },
+  {
+    "posicion": "30",
+    "nombre": "San Martín",
+    "url": "https://www.promiedos.com.ar/team/san-martin/hcai",
+    "nombreCompleto": "San Martín San Juan",
+    "proximosPartidos": [
+      {
+        "fecha": "02/06",
+        "rival": "Racing",
+        "hora": "12:00"
+      },
+      {
+        "fecha": "13/07",
+        "rival": "Atl. Tucumán",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "20/07",
+        "rival": "Riestra",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "27/07",
+        "rival": "Central",
+        "hora": "14:00"
+      },
+      {
+        "fecha": "10/08",
+        "rival": "Sarmiento",
+        "hora": "14:00"
+      }
+    ],
+    "seccionesDisponibles": [
+      "PRÓXIMOS PARTIDOS",
+      "Resultados",
+      "PLANTEL",
+      "ESTADÍSTICAS PERSONALES",
+      "Goles",
+      "Asistencias",
+      "Barridas ganadas",
+      "Tarjetas Rojas",
+      "Tarjetas Amarillas"
+    ]
+  }
+]

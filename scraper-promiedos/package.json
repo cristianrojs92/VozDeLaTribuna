@@ -1,0 +1,30 @@
+{
+  "name": "scraper-promiedos",
+  "version": "1.0.0",
+  "description": "Scraper para obtener datos de equipos y tablas de Promiedos",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "promedios": "node promedios.js",
+    "equipos-info": "node equipos-info.js",
+    "river-test": "node river-test.js",
+    "plantel-html": "node plantel-desde-html.js",
+    "combinar": "node combinar-info.js",
+    "todo": "node ejecutar-todo.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "scraper",
+    "puppeteer",
+    "futbol",
+    "promiedos"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^1.4.0",
+    "cheerio": "^1.0.0-rc.12",
+    "jsdom": "^22.1.0",
+    "puppeteer": "^20.0.0"
+  }
+}
