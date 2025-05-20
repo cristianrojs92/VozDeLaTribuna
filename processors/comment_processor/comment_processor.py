@@ -26,37 +26,50 @@ MATCH_CONTEXT_ENABLED = os.getenv('MATCH_CONTEXT_ENABLED', 'true').lower() == 't
 
 # --- Diccionarios para Análisis de Sentimiento MVP ---
 DICCIONARIO_POSITIVAS_MVP = {
-    "gol": 1.0, "gool": 1.0, "goool": 1.0, "golazo": 1.8, "golazooo": 1.8,
-    "victoria": 1.5, "ganamos": 1.4, "ganar": 1.2, "triunfo": 1.5, "partidazo": 1.6,
-    "alegria": 1.0, "felicidad": 1.0, "festejo": 0.9, "que grande": 1.2, "qué grande": 1.2,
-    "que bueno": 1.1, "qué bueno": 1.1, "buenisimo": 1.3, "buenísima": 1.3,
-    "joya": 1.0, "espectacular": 1.5, "impresionante": 1.6, "épico": 1.7, "epico": 1.7,
-    "crack": 1.7, "genio": 1.6, "figura": 1.5, "idolo": 1.6, "ídolo": 1.6,
-    "maestro": 1.4, "jugadorazo": 1.7, "equipazo": 1.6, "la rompio": 1.5,
-    "la rompió": 1.5, "se paso": 1.4, "se pasó": 1.4, "te pusiste la 10": 2.0,
-    "pusiste la 10": 2.0, "jugador": 0.5, "maquina": 1.3, "máquina": 1.3,
-    "bestia": 1.4, "mostro": 1.3, "monstruo": 1.3, "vamos": 0.8, "vamooos": 0.8,
-    "vamo": 0.8, "dale": 0.7, "dalee": 0.7, "aguante": 0.9, "fuerza": 0.6,
-    "con todo": 0.8, "a full": 0.7, "huevo": 1.0, "huevos": 1.0, "pongan huevo": 0.8,
-    "bien": 0.9, "muy bien": 1.2, "excelente": 1.5, "buen partido": 1.1,
-    "buena jugada": 1.0, "calidad": 1.2, "jugaron bien": 1.1, "agrandado": 0.7,
-    "comerse la cancha": 1.6, "mortal": 1.4, "que jugador": 1.5, "qué jugador": 1.5,
-    "que gol": 1.3, "qué gol": 1.3, "merecido": 1.0, "justicia": 0.8,
-    "👍": 1.0, "❤️": 1.2, "🎉": 1.1, "😂": 0.7, "👏": 0.9, "🔥": 1.3,
-    "⚽": 0.5, "🏆": 1.4, "💪": 0.8, "💯": 1.2, "🤩": 1.3, "🥳": 1.1,
+    # Festejo y Alegría General
+    "gol": 1.0, "gool": 1.0, "goool": 1.0, "golazo": 1.8, "golazooo": 1.8, "victoria": 1.5,
+    "ganamos": 1.4, "ganar": 1.2, "triunfo": 1.5, "partidazo": 1.6, "alegria": 1.0, "felicidad": 1.0,
+    "festejo": 0.9, "que grande": 1.2, "qué grande": 1.2, "que bueno": 1.1, "qué bueno": 1.1,
+    "buenisimo": 1.3, "buenísima": 1.3, "joya": 1.0, "espectacular": 1.5, "impresionante": 1.6,
+    "épico": 1.7, "epico": 1.7,
+    # Elogios a Jugadores/Equipo
+    "crack": 1.7, "genio": 1.6, "figura": 1.5, "idolo": 1.6, "ídolo": 1.6, "maestro": 1.4,
+    "jugadorazo": 1.7, "equipazo": 1.6, "la rompio": 1.5, "la rompió": 1.5, "se paso": 1.4,
+    "se pasó": 1.4, "te pusiste la 10": 2.0, "pusiste la 10": 2.0, "jugador": 0.5,
+    "maquina": 1.3, "máquina": 1.3, "bestia": 1.4, "mostro": 1.3, "monstruo": 1.3,
+    # Apoyo y Ánimo
+    "vamos": 0.8, "vamooos": 0.8, "vamo": 0.8, "dale": 0.7, "dalee": 0.7, "aguante": 0.9,
+    "fuerza": 0.6, "con todo": 0.8, "a full": 0.7, "huevo": 1.0, "huevos": 1.0,
+    "pongan huevo": 0.8,
+    # Buen Rendimiento o Calidad
+    "bien": 0.9, "muy bien": 1.2, "excelente": 1.5, "buen partido": 1.1, "buena jugada": 1.0,
+    "calidad": 1.2, "jugaron bien": 1.1, "agrandado": 0.7, "comerse la cancha": 1.6,
+    "mortal": 1.4, "que jugador": 1.5, "qué jugador": 1.5, "que gol": 1.3, "qué gol": 1.3,
+    "merecido": 1.0, "justicia": 0.8,
+    # Emojis Positivos
+    "👍": 1.0, "❤️": 1.2, "🎉": 1.1, "😂": 0.7, "👏": 0.9, "🔥": 1.3, "⚽": 0.5,
+    "🏆": 1.4, "💪": 0.8, "💯": 1.2, "🤩": 1.3, "🥳": 1.1,
+    # Nuevas adiciones basadas en análisis de comentarios
     "ufff": 0.7, "uf": 0.7, "uff": 0.7, "god": 1.8, "goddd": 1.8, "joyita": 1.1,
-    "claro": 0.6, "claro que si": 0.7, "obvio": 0.6, "banco": 1.2,
-    "te banco": 1.3, "bancan": 1.2, "🤑": 1.0, "sacalaaa": 0.9,
-    "increíble": 1.5, "increible": 1.5, "comiendo la cancha": 1.5,
-    "se come la cancha": 1.5, "imparable": 1.4, "gran partido": 1.4,
-    "gran atajada": 1.3, "salvó": 1.2, "salva": 1.2, "salvando": 1.2,
-    "con calidad": 1.1, "atajada": 1.0, "tiene nivel": 1.0, "dominan": 0.9,
-    "dominando": 0.9, "preciso": 0.9, "precisa": 0.9, "presiona": 0.8,
-    "presionando": 0.8, "bien ubicado": 0.8, "recupera": 0.8, "metido": 0.8,
-    "concentrado": 0.8, "atento": 0.7, "anticipando": 0.7, "intenta": 0.6,
-    "vamos carajo": 1.3, "jugadorón": 1.6, "genial": 1.3, "brillante": 1.5,
-    "inspirado": 1.2, "animal": 1.4, "tremendo": 1.3, "figuron": 1.4,
-    "león": 1.2, "rompió todo": 1.4
+    "claro": 0.6, "claro que si": 0.7, "obvio": 0.6, "banco": 1.2, "te banco": 1.3,
+    "bancan": 1.2, "🤑": 1.0, "sacalaaa": 0.9,
+    # Términos adicionales basados en análisis de comentarios de fútbol 
+    "increíble": 1.5, "increible": 1.5, "comiendo la cancha": 1.5, "se come la cancha": 1.5,
+    "imparable": 1.4, "gran partido": 1.4, "gran atajada": 1.3, "salvó": 1.2, "salva": 1.2,
+    "salvando": 1.2, "con calidad": 1.1, "atajada": 1.0, "tiene nivel": 1.0, "dominan": 0.9,
+    "dominando": 0.9, "preciso": 0.9, "precisa": 0.9, "presiona": 0.8, "presionando": 0.8,
+    "bien ubicado": 0.8, "recupera": 0.8, "metido": 0.8, "concentrado": 0.8, "atento": 0.7,
+    "anticipando": 0.7, "intenta": 0.6,
+    # Nuevos términos de posesión de balón (añadidos para corregir clasificación)
+    "dominar": 1.2, "domina": 1.2, "dominan": 1.2, "posesión": 0.9, "posesion": 0.9,
+    "tiene la pelota": 1.0, "tienen la pelota": 1.0, "maneja el balón": 1.1, "manejan el balón": 1.1,
+    "controla el partido": 1.3, "controlan el partido": 1.3, "diablos rojos dominan": 1.5,
+    "dominar la posesión": 1.4, "domina la posesión": 1.4, "dominan la posesión": 1.4,
+    "dominar la posesion": 1.4, "domina la posesion": 1.4, "dominan la posesion": 1.4,
+    "buen manejo": 1.1, "retiene el balón": 0.9, "retienen el balón": 0.9,
+    "retiene la pelota": 0.9, "retienen la pelota": 0.9, "toque": 0.8, "toques": 0.8,
+    "buen toque": 1.0, "buenos toques": 1.0, "circulación": 0.9, "circulacion": 0.9,
+    "buena circulación": 1.1, "buena circulacion": 1.1, "control del balón": 1.0, "control del balon": 1.0
 }
 
 DICCIONARIO_NEGATIVAS_MVP = {
