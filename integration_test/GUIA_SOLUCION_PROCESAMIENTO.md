@@ -112,6 +112,82 @@ El procesador ahora implementa un manejo robusto de errores:
    - Los mensajes que producen error son reconocidos (ACK) para evitar que queden pendientes
    - Se mantiene estadística de mensajes fallidos vs. exitosos
 
+## Uso de Archivos de Log para Diagnóstico
+
+El procesador ahora guarda todos los logs en archivos para facilitar el diagnóstico después de las ejecuciones:
+
+### Ubicación de los archivos de log
+
+Los logs se almacenan en la carpeta:
+```
+processors/comment_processor/logs/
+```
+
+Con el formato de nombre: `comment_processor_YYYY-MM-DD.log`
+
+### Análisis de problemas usando los logs
+
+1. **Comprobar errores de conexión a Redis**:
+   ```bash
+   grep "Error de Redis" processors/comment_processor/logs/comment_processor_*.log
+   ```
+
+2. **Verificar mensajes no procesados**:
+   ```bash
+   grep "Error al procesar mensaje" processors/comment_processor/logs/comment_processor_*.log
+   ```
+
+3. **Revisar problemas con los diccionarios**:
+   ```bash
+   grep "Error al cargar diccionarios" processors/comment_processor/logs/comment_processor_*.log
+   ```
+
+4. **Comprobar problemas de análisis de sentimiento**:
+   ```bash
+   grep "Error en análisis de sentimiento" processors/comment_processor/logs/comment_processor_*.log
+   ```
+
+5. **Verificar problemas de detección de entidades**:
+   ```bash
+   grep "Error en detección de" processors/comment_processor/logs/comment_processor_*.log
+   ```
+
+### Análisis estadístico con los logs
+
+Puedes extraer estadísticas útiles de los logs:
+
+1. **Total de mensajes procesados**:
+   ```bash
+   grep "Mensaje .* procesado correctamente" processors/comment_processor/logs/comment_processor_*.log | wc -l
+   ```
+
+2. **Total de errores**:
+   ```bash
+   grep -c "❌" processors/comment_processor/logs/comment_processor_*.log
+   ```
+
+3. **Comentarios con sentimiento positivo**:
+   ```bash
+   grep "SENTIMIENTO: positive" processors/comment_processor/logs/comment_processor_*.log | wc -l
+   ```
+
+4. **Comentarios con sentimiento negativo**:
+   ```bash
+   grep "SENTIMIENTO: negative" processors/comment_processor/logs/comment_processor_*.log | wc -l
+   ```
+
+### Exportación de logs para análisis externo
+
+Para análisis más detallados, puedes exportar los logs:
+
+```bash
+# Extraer todos los comentarios procesados como JSON (un comentario por línea)
+grep -A 20 "COMENTARIO PROCESADO" processors/comment_processor/logs/comment_processor_*.log > comentarios_procesados.txt
+
+# Exportar solo los errores
+grep "❌" processors/comment_processor/logs/comment_processor_*.log > errores.log
+```
+
 ## Pasos a Seguir para un Test Exitoso
 
 1. **Limpiar Redis**:
@@ -133,6 +209,7 @@ El procesador ahora implementa un manejo robusto de errores:
    - Observar los logs decorados con emojis
    - Comprobar que todos los mensajes son procesados
    - Verificar que los contadores de mensajes coinciden con lo esperado
+   - Revisar los archivos de log para análisis detallado
 
 ## Solución de problemas con el Análisis de Sentimiento
 

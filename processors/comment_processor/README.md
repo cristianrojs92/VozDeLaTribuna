@@ -25,6 +25,8 @@ Este script actúa como un consumidor de un Stream de Redis, procesando los come
     *   Cuenta mensajes procesados para mantener estadísticas de rendimiento
     *   Muestra resúmenes por lotes de mensajes procesados
     *   Niveles de logging configurables (INFO/DEBUG)
+    *   Registro simultáneo en consola y archivos de log
+    *   Rotación automática de archivos para gestionar el tamaño
 8.  **Salida**: Imprime el diccionario del comentario enriquecido en la consola con formato JSON amigable.
 
 ## Configuración
@@ -72,6 +74,34 @@ Este script actúa como un consumidor de un Stream de Redis, procesando los come
 
     El script comenzará a intentar leer y procesar mensajes del stream. Los comentarios enriquecidos se imprimirán en la consola.
     Para detener el script, presiona `Ctrl+C`.
+
+## Sistema de Logs
+
+El procesador ahora guarda todos los mensajes en archivos de log además de mostrarlos en la consola:
+
+1. **Ubicación de los archivos**:
+   - Los logs se guardan en la carpeta `logs` dentro del directorio del procesador
+   - El nombre del archivo sigue el formato: `comment_processor_YYYY-MM-DD.log`
+
+2. **Rotación de logs**:
+   - Los archivos tienen un tamaño máximo de 5MB
+   - Se mantienen hasta 5 archivos de respaldo (`.log.1`, `.log.2`, etc.)
+   - Cuando el archivo actual supera el límite, se crea uno nuevo
+
+3. **Acceso a los logs**:
+   - Puedes ver los logs en tiempo real mientras se ejecuta el procesador:
+     ```bash
+     tail -f processors/comment_processor/logs/comment_processor_*.log
+     ```
+   - Para buscar información específica:
+     ```bash
+     grep "palabra clave" processors/comment_processor/logs/comment_processor_*.log
+     ```
+
+4. **Contenido de los logs**:
+   - Todos los mensajes que se muestran en consola también se guardan en el archivo
+   - Incluye marcas de tiempo, nivel de log y mensaje con emojis
+   - Los comentarios procesados se guardan en formato JSON legible
 
 ## Estructura de Datos Esperada del Stream (Producida por `youtube_to_redis_producer.py`)
 

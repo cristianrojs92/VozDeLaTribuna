@@ -5,15 +5,36 @@ import json
 import uuid # Para generar internal_comment_id
 from datetime import datetime, timezone
 import logging
+import logging.handlers  # Para la rotación de archivos de log
 import re # Para la limpieza de texto
 from dotenv import load_dotenv
 import glob # Para buscar archivos JSON de jugadores
 
-# Configurar logging básico (salida en inglés)
-# Aumentar el nivel de detalle del logging para asegurar que se muestren todos los mensajes
+# Crear carpeta de logs si no existe
+log_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'logs')
+os.makedirs(log_dir, exist_ok=True)
+
+# Configurar el nombre del archivo de log con la fecha actual
+current_date = datetime.now().strftime("%Y-%m-%d")
+log_file = os.path.join(log_dir, f"comment_processor_{current_date}.log")
+
+# Configurar logging con salida a consola y archivo
 logging.basicConfig(level=logging.DEBUG, 
                     format='%(asctime)s - %(levelname)s - %(message)s',
-                    datefmt='%Y-%m-%d %H:%M:%S')
+                    datefmt='%Y-%m-%d %H:%M:%S',
+                    handlers=[
+                        # Handler para la consola
+                        logging.StreamHandler(),
+                        # Handler para archivo con rotación (5 archivos de 5MB máximo)
+                        logging.handlers.RotatingFileHandler(
+                            filename=log_file,
+                            maxBytes=5*1024*1024,  # 5MB
+                            backupCount=5,
+                            encoding='utf-8'
+                        )
+                    ])
+
+logging.info(f"Configuración de logs establecida. Archivo de log: {log_file}")
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
@@ -533,7 +554,23 @@ def detect_mentioned_players_mvp(text_to_analyze):
             logging.warning("Diccionario JUGADORES_MVP vacío. No es posible la detección de jugadores.")
             return []
 
-        logging.info(f"Buscando jugadores mencionados en texto de {len(text_to_analyze)} caracteres")
+        logging.info(f"Buscando jugadores mencionados en texto de {len(text_to_analyze)} caracteres: '{text_to_analyze[:50]}...'")
+        
+        # Información de diagnóstico sobre el tamaño del diccionario de jugadores
+        team_counts = {}
+        for _, player_info in JUGADORES_MVP.items():
+            equipo = player_info.get('equipo_actual', 'Sin equipo')
+            team_counts[equipo] = team_counts.get(equipo, 0) + 1
+        
+        team_info = ", ".join([f"{team}: {count}" for team, count in team_counts.items()])
+        logging.info(f"Diccionario de jugadores contiene {len(JUGADORES_MVP)} jugadores de equipos: {team_info}")
+        
+        # Si estamos en modo de contexto, mostrar más información
+        if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+            home_count = team_counts.get(MATCH_HOME_TEAM, 0)
+            away_count = team_counts.get(MATCH_AWAY_TEAM, 0)
+            logging.info(f"Contexto de partido: {MATCH_HOME_TEAM} ({home_count} jugadores) vs {MATCH_AWAY_TEAM} ({away_count} jugadores)")
+        
         text_lower = text_to_analyze.lower()
         found_players = []
 
@@ -555,59 +592,138 @@ def detect_mentioned_players_mvp(text_to_analyze):
         max_players = 100  # Limitar a un número razonable en caso de diccionarios muy grandes
         player_count = 0
         
+        # Normalizar el texto para comparación
+        normalized_text = re.sub(r'[^\w\s]', '', text_lower)
+        normalized_text = " " + normalized_text + " "  # Añadir espacios para facilitar búsqueda de palabras completas
+        
+        # PRIMERA FASE: Buscar jugadores mencionados al comienzo del texto (muy común en comentarios)
+        # Esto mejora la detección de frases como "Walter Mazzantti es un crack"
+        text_start = text_lower[:50]  # Tomar solo el comienzo del texto
+        
         for canonical_name, player_info in JUGADORES_MVP.items():
-            player_count += 1
-            if player_count > max_players:
-                logging.warning(f"Se alcanzó el límite de {max_players} jugadores verificados")
-                break
+            canonical_lower = canonical_name.lower()
+            # Si el texto comienza con el nombre del jugador, es una mención clara
+            if text_start.startswith(canonical_lower) or f" {canonical_lower} " in f" {text_start} ":
+                equipo_actual = player_info.get('equipo_actual', '')
+                # Verificar criterios contextuales
+                if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+                    player_in_match_teams = equipo_actual in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
+                    if not player_in_match_teams:
+                        logging.debug(f"Omitiendo jugador {canonical_name} al inicio (equipo {equipo_actual}) que no está en equipos del partido")
+                        continue
                 
-            try:
-                aliases = player_info.get('aliases', [])
+                player_obj = {
+                    "name": canonical_name,
+                    "team": equipo_actual
+                }
+                if player_obj not in found_players:
+                    found_players.append(player_obj)
+                    logging.info(f"Jugador encontrado al inicio del texto: {canonical_name} (equipo: {equipo_actual})")
+        
+        # SEGUNDA FASE: Buscar coincidencias directas con nombres completos
+        direct_matches = []
+        for canonical_name, player_info in JUGADORES_MVP.items():
+            # Normalizar el nombre canónico para comparación
+            normalized_name = " " + re.sub(r'[^\w\s]', '', canonical_name.lower()) + " "
+            if normalized_name in normalized_text:
+                direct_matches.append((canonical_name, player_info))
+                logging.debug(f"Coincidencia directa encontrada: {canonical_name}")
+        
+        # Si encontramos coincidencias directas, procesarlas
+        if direct_matches:
+            for canonical_name, player_info in direct_matches:
                 equipo_actual = player_info.get('equipo_actual', '')
                 
-                # Si estamos en contexto de partido y hay equipos mencionados,
-                # verificamos si este jugador pertenece a alguno de ellos para priorizar
-                if MATCH_CONTEXT_ENABLED and mentioned_team_names:
-                    # Si el jugador no pertenece a ningún equipo mencionado en el texto,
-                    # y tampoco a los equipos del partido, le damos menor prioridad
-                    player_team_mentioned = equipo_actual in mentioned_team_names
+                # Verificar criterios contextuales
+                if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
                     player_in_match_teams = equipo_actual in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
+                    if not player_in_match_teams:
+                        logging.debug(f"Omitiendo jugador {canonical_name} (equipo {equipo_actual}) que no está en equipos del partido")
+                        continue
+                
+                # Añadir jugador si no está ya en la lista
+                player_obj = {
+                    "name": canonical_name,
+                    "team": equipo_actual
+                }
+                if player_obj not in found_players:
+                    found_players.append(player_obj)
+                    logging.info(f"Jugador encontrado por nombre completo: {canonical_name} (equipo: {equipo_actual})")
+        
+        # TERCERA FASE: Proceder con la búsqueda por alias si no se encontraron coincidencias o para buscar más
+        if len(found_players) < 3:  # Limitar a 3 jugadores para evitar falsos positivos excesivos
+            for canonical_name, player_info in JUGADORES_MVP.items():
+                player_count += 1
+                if player_count > max_players:
+                    logging.warning(f"Se alcanzó el límite de {max_players} jugadores verificados")
+                    break
                     
-                    if not (player_team_mentioned or player_in_match_teams):
-                        continue  # Omitir jugadores que no están en el contexto relevante
-                
-                # Limitar el número de alias por jugador
-                max_aliases = 20
-                alias_count = 0
-                
-                for alias in aliases:
-                    alias_count += 1
-                    if alias_count > max_aliases:
-                        logging.debug(f"Se omitieron algunos alias para {canonical_name} (límite: {max_aliases})")
-                        break
+                try:
+                    aliases = player_info.get('aliases', [])
+                    equipo_actual = player_info.get('equipo_actual', '')
+                    
+                    # Si estamos en contexto de partido y hay equipos mencionados,
+                    # verificamos si este jugador pertenece a alguno de ellos para priorizar
+                    if MATCH_CONTEXT_ENABLED and mentioned_team_names:
+                        # Si el jugador no pertenece a ningún equipo mencionado en el texto,
+                        # y tampoco a los equipos del partido, le damos menor prioridad
+                        player_team_mentioned = equipo_actual in mentioned_team_names
+                        player_in_match_teams = equipo_actual in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
                         
-                    try:
-                        alias_lower = alias.lower()
-                        pattern = r'\b' + re.escape(alias_lower) + r'\b'
-                        if re.search(pattern, text_lower):
-                            # Añadir jugador con su información si no está ya en la lista
+                        if not (player_team_mentioned or player_in_match_teams):
+                            continue  # Omitir jugadores que no están en el contexto relevante
+                    
+                    # NUEVA VERIFICACIÓN: Buscar frases exactas como "es un crack"
+                    # Esto es útil para casos como "Walter Mazzantti es un crack"
+                    for alias in aliases:
+                        if alias.lower() in text_lower and len(alias) > 10:  # Solo considerar frases largas
                             player_obj = {
                                 "name": canonical_name,
                                 "team": equipo_actual
                             }
-                            if player_obj not in found_players:  # Evitar duplicados
+                            if player_obj not in found_players:
                                 found_players.append(player_obj)
-                                logging.debug(f"Encontrado jugador: {canonical_name} (alias: {alias_lower})")
-                            break  # Si ya encontramos un alias para este jugador, pasamos al siguiente
-                    except re.error as e:
-                        logging.warning(f"Error de regex para alias '{alias_lower}' del jugador '{canonical_name}': {e}")
-                        continue
-                    except Exception as e:
-                        logging.error(f"Error inesperado al buscar alias '{alias}' del jugador '{canonical_name}': {e}")
-                        continue
-            except Exception as e:
-                logging.error(f"Error procesando jugador {canonical_name}: {e}")
-                continue
+                                logging.info(f"Jugador encontrado por frase exacta: {canonical_name} (frase: {alias})")
+                                break
+                    
+                    # Limitar el número de alias por jugador
+                    max_aliases = 20
+                    alias_count = 0
+                    
+                    for alias in aliases:
+                        alias_count += 1
+                        if alias_count > max_aliases:
+                            logging.debug(f"Se omitieron algunos alias para {canonical_name} (límite: {max_aliases})")
+                            break
+                            
+                        try:
+                            alias_lower = alias.lower()
+                            
+                            # Usar una búsqueda más robusta con un patrón de palabra completa
+                            # Normalizar el alias quitando puntuación
+                            normalized_alias = re.sub(r'[^\w\s]', '', alias_lower)
+                            normalized_alias = " " + normalized_alias + " "  # Añadir espacios para buscar palabra completa
+                            
+                            # Comprobar si el alias está en el texto normalizado
+                            if normalized_alias in normalized_text:
+                                # Añadir jugador con su información si no está ya en la lista
+                                player_obj = {
+                                    "name": canonical_name,
+                                    "team": equipo_actual
+                                }
+                                if player_obj not in found_players:  # Evitar duplicados
+                                    found_players.append(player_obj)
+                                    logging.debug(f"Encontrado jugador: {canonical_name} (alias: {alias_lower})")
+                                break  # Si ya encontramos un alias para este jugador, pasamos al siguiente
+                        except re.error as e:
+                            logging.warning(f"Error de regex para alias '{alias_lower}' del jugador '{canonical_name}': {e}")
+                            continue
+                        except Exception as e:
+                            logging.error(f"Error inesperado al buscar alias '{alias}' del jugador '{canonical_name}': {e}")
+                            continue
+                except Exception as e:
+                    logging.error(f"Error procesando jugador {canonical_name}: {e}")
+                    continue
         
         # Desambiguación: si tenemos jugadores de diferentes equipos y algunos son del contexto del partido,
         # y otros no, priorizamos los del partido
@@ -623,6 +739,9 @@ def detect_mentioned_players_mvp(text_to_analyze):
         
         if found_players:
             logging.info(f"Total jugadores encontrados: {len(found_players)}")
+            # Mostrar los jugadores encontrados para depuración
+            for player in found_players:
+                logging.info(f"- {player['name']} ({player['team']})")
         else:
             logging.info("No se encontraron jugadores mencionados")
             
@@ -796,13 +915,19 @@ def consume_and_process_comments(redis_client, stream_name, group_name, consumer
                         enriched_comment = process_message(message_id, message_data)
 
                         if enriched_comment:
-                            # Por ahora, solo imprimir el comentario enriquecido
+                            # Formatear el comentario enriquecido como JSON con indentación
                             enriched_json = json.dumps(enriched_comment, indent=2, ensure_ascii=False)
-                            print("\n" + "="*80)
+                            
+                            # Imprimir en consola con delimitadores
+                            delimiter = "="*80
+                            print("\n" + delimiter)
                             print(f"COMENTARIO PROCESADO #{total_messages_processed + 1}:")
-                            print("="*80)
+                            print(delimiter)
                             print(enriched_json)
-                            print("="*80 + "\n")
+                            print(delimiter + "\n")
+                            
+                            # Registrar en el log también con el mismo formato
+                            logging.info(f"\n{delimiter}\nCOMENTARIO PROCESADO #{total_messages_processed + 1}:\n{delimiter}\n{enriched_json}\n{delimiter}\n")
                             
                             message_ids_to_ack.append(message_id)
                             total_messages_processed += 1
