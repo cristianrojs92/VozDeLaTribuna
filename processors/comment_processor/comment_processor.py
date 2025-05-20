@@ -10,7 +10,10 @@ from dotenv import load_dotenv
 import glob # Para buscar archivos JSON de jugadores
 
 # Configurar logging básico (salida en inglés)
-logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
+# Aumentar el nivel de detalle del logging para asegurar que se muestren todos los mensajes
+logging.basicConfig(level=logging.DEBUG, 
+                    format='%(asctime)s - %(levelname)s - %(message)s',
+                    datefmt='%Y-%m-%d %H:%M:%S')
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
@@ -23,76 +26,52 @@ MATCH_CONTEXT_ENABLED = os.getenv('MATCH_CONTEXT_ENABLED', 'true').lower() == 't
 
 # --- Diccionarios para Análisis de Sentimiento MVP ---
 DICCIONARIO_POSITIVAS_MVP = {
-    # Festejo y Alegría General
-    "gol": 1.0, "gool": 1.0, "goool": 1.0, "golazo": 1.8, "golazooo": 1.8, "victoria": 1.5,
-    "ganamos": 1.4, "ganar": 1.2, "triunfo": 1.5, "partidazo": 1.6, "alegria": 1.0, "felicidad": 1.0,
-    "festejo": 0.9, "que grande": 1.2, "qué grande": 1.2, "que bueno": 1.1, "qué bueno": 1.1,
-    "buenisimo": 1.3, "buenísima": 1.3, "joya": 1.0, "espectacular": 1.5, "impresionante": 1.6,
-    "épico": 1.7, "epico": 1.7,
-    # Elogios a Jugadores/Equipo
-    "crack": 1.7, "genio": 1.6, "figura": 1.5, "idolo": 1.6, "ídolo": 1.6, "maestro": 1.4,
-    "jugadorazo": 1.7, "equipazo": 1.6, "la rompio": 1.5, "la rompió": 1.5, "se paso": 1.4,
-    "se pasó": 1.4, "te pusiste la 10": 2.0, "pusiste la 10": 2.0, "jugador": 0.5,
-    "maquina": 1.3, "máquina": 1.3, "bestia": 1.4, "mostro": 1.3, "monstruo": 1.3,
-    # Apoyo y Ánimo
-    "vamos": 0.8, "vamooos": 0.8, "vamo": 0.8, "dale": 0.7, "dalee": 0.7, "aguante": 0.9,
-    "fuerza": 0.6, "con todo": 0.8, "a full": 0.7, "huevo": 1.0, "huevos": 1.0,
-    "pongan huevo": 0.8,
-    # Buen Rendimiento o Calidad
-    "bien": 0.9, "muy bien": 1.2, "excelente": 1.5, "buen partido": 1.1, "buena jugada": 1.0,
-    "calidad": 1.2, "jugaron bien": 1.1, "agrandado": 0.7, "comerse la cancha": 1.6,
-    "mortal": 1.4, "que jugador": 1.5, "qué jugador": 1.5, "que gol": 1.3, "qué gol": 1.3,
-    "merecido": 1.0, "justicia": 0.8,
-    # Emojis Positivos
-    "👍": 1.0, "❤️": 1.2, "🎉": 1.1, "😂": 0.7, "👏": 0.9, "🔥": 1.3, "⚽": 0.5,
-    "🏆": 1.4, "💪": 0.8, "💯": 1.2, "🤩": 1.3, "🥳": 1.1,
-    # Nuevas adiciones basadas en análisis de comentarios
+    "gol": 1.0, "gool": 1.0, "goool": 1.0, "golazo": 1.8, "golazooo": 1.8,
+    "victoria": 1.5, "ganamos": 1.4, "ganar": 1.2, "triunfo": 1.5, "partidazo": 1.6,
+    "alegria": 1.0, "felicidad": 1.0, "festejo": 0.9, "que grande": 1.2, "qué grande": 1.2,
+    "que bueno": 1.1, "qué bueno": 1.1, "buenisimo": 1.3, "buenísima": 1.3,
+    "joya": 1.0, "espectacular": 1.5, "impresionante": 1.6, "épico": 1.7, "epico": 1.7,
+    "crack": 1.7, "genio": 1.6, "figura": 1.5, "idolo": 1.6, "ídolo": 1.6,
+    "maestro": 1.4, "jugadorazo": 1.7, "equipazo": 1.6, "la rompio": 1.5,
+    "la rompió": 1.5, "se paso": 1.4, "se pasó": 1.4, "te pusiste la 10": 2.0,
+    "pusiste la 10": 2.0, "jugador": 0.5, "maquina": 1.3, "máquina": 1.3,
+    "bestia": 1.4, "mostro": 1.3, "monstruo": 1.3, "vamos": 0.8, "vamooos": 0.8,
+    "vamo": 0.8, "dale": 0.7, "dalee": 0.7, "aguante": 0.9, "fuerza": 0.6,
+    "con todo": 0.8, "a full": 0.7, "huevo": 1.0, "huevos": 1.0, "pongan huevo": 0.8,
+    "bien": 0.9, "muy bien": 1.2, "excelente": 1.5, "buen partido": 1.1,
+    "buena jugada": 1.0, "calidad": 1.2, "jugaron bien": 1.1, "agrandado": 0.7,
+    "comerse la cancha": 1.6, "mortal": 1.4, "que jugador": 1.5, "qué jugador": 1.5,
+    "que gol": 1.3, "qué gol": 1.3, "merecido": 1.0, "justicia": 0.8,
+    "👍": 1.0, "❤️": 1.2, "🎉": 1.1, "😂": 0.7, "👏": 0.9, "🔥": 1.3,
+    "⚽": 0.5, "🏆": 1.4, "💪": 0.8, "💯": 1.2, "🤩": 1.3, "🥳": 1.1,
     "ufff": 0.7, "uf": 0.7, "uff": 0.7, "god": 1.8, "goddd": 1.8, "joyita": 1.1,
-    "claro": 0.6, "claro que si": 0.7, "obvio": 0.6, "banco": 1.2, "te banco": 1.3,
-    "bancan": 1.2, "🤑": 1.0, "sacalaaa": 0.9
+    "claro": 0.6, "claro que si": 0.7, "obvio": 0.6, "banco": 1.2,
+    "te banco": 1.3, "bancan": 1.2, "🤑": 1.0, "sacalaaa": 0.9,
+    "increíble": 1.5, "increible": 1.5, "comiendo la cancha": 1.5,
+    "se come la cancha": 1.5, "imparable": 1.4, "gran partido": 1.4,
+    "gran atajada": 1.3, "salvó": 1.2, "salva": 1.2, "salvando": 1.2,
+    "con calidad": 1.1, "atajada": 1.0, "tiene nivel": 1.0, "dominan": 0.9,
+    "dominando": 0.9, "preciso": 0.9, "precisa": 0.9, "presiona": 0.8,
+    "presionando": 0.8, "bien ubicado": 0.8, "recupera": 0.8, "metido": 0.8,
+    "concentrado": 0.8, "atento": 0.7, "anticipando": 0.7, "intenta": 0.6,
+    "vamos carajo": 1.3, "jugadorón": 1.6, "genial": 1.3, "brillante": 1.5,
+    "inspirado": 1.2, "animal": 1.4, "tremendo": 1.3, "figuron": 1.4,
+    "león": 1.2, "rompió todo": 1.4
 }
 
 DICCIONARIO_NEGATIVAS_MVP = {
-    # Decepción, Enojo, Crítica General
-    "desastre": -1.5, "horrible": -1.4, "mal": -0.8, "malo": -1.0, "malos": -1.0,
-    "malísimo": -1.3, "malisimo": -1.3, "pésimo": -1.4, "pesimo": -1.4, "decepcion": -1.2,
-    "decepción": -1.2, "frustrante": -1.1, "que mal": -1.0, "qué mal": -1.0,
-    "mamita querida": -0.9, "no puede ser": -0.8, "asi no": -0.9, "así no": -0.9,
-    "para el olvido": -1.2, "verguenza": -1.5, "vergüenza": -1.5, "lamentable": -1.3,
-    "desilusion": -1.1, "desilusión": -1.1, "bronca": -1.0, "caliente": -0.9, "calentura": -1.0,
-    # Insultos/Críticas a Jugadores/Equipo
-    "burro": -1.3, "muerto": -1.6, "muertos": -1.6, "perro": -1.4, "tronco": -1.5,
-    "paquete": -1.5, "pecho frio": -1.8, "pechofrío": -1.8, "pechos frios": -1.8,
-    "pechosfríos": -1.8, "patadura": -1.2, "equipo chico": -1.0, "no juegan a nada": -1.4,
-    "son un desastre": -1.3, "morfón": -1.6, "morfon": -1.6, "cagon": -1.7, "cagón": -1.7,
-    "vendehumo": -1.5, "chambon": -1.2, "chambón": -1.2, "fantasma": -1.1, "impresentable": -1.4,
-    "desaparecido": -1.0, "horribles": -1.4, "asco": -1.6, "dan asco": -1.7,
-    "muerto de hambre": -1.5,
-    # Insultos Fuertes / Agresión (comunes en chat)
-    "la concha de tu madre": -2.0, "lcdtm": -2.0, "hijo de puta": -1.9, "hdp": -1.9,
-    "forro": -1.7, "pelotudo": -1.6, "boludo": -1.0, "andate a la mierda": -1.8,
-    "puto": -1.8, "orto": -1.5, "culo roto": -1.7,
-    # Críticas al Arbitraje / Juego Sucio
-    "robo": -1.7, "afano": -1.7, "ladron": -1.6, "ladrón": -1.6, "chorro": -1.6,
-    "comprado": -1.5, "penalazo no cobrado": -1.3, "era roja": -1.1, "cobra bien": -0.5,
-    "referi horrible": -1.4, "árbitro horrible": -1.4, "mal arbitraje": -1.3,
-    "nos robaron": -1.7, "nos cagaron": -1.7, "cagaron": -1.7,
-    # Mal Rendimiento
-    "mal rendimiento": -1.0, "no corren": -1.2, "se arrastran": -1.3, "erro solo": -1.1,
-    "erró solo": -1.1, "se comio un gol": -1.3, "se comió un gol": -1.3,
-    "colgarse del travesaño": -0.8, "cascotear el rancho": -0.5, "cerrarse el arco": -0.7,
-    "no patean al arco": -1.1, "sin ideas": -1.0, "falta actitud": -1.2, "baja el nivel": -0.9,
-    # Emojis Negativos
-    "👎": -1.0, "😠": -1.2, "🤦": -0.9, "💩": -1.5, "😤": -1.1, "😡": -1.3, "🥶": -1.0,
-    "��": -0.8, "🙄": -0.7,
-    # Nuevas adiciones basadas en análisis de comentarios
-    "malisimo lcdtm": -2.2, "ni ganas": -0.9, "humo": -1.3, "un kilo": -1.4,
-    "afk": -0.8, "bodrio": -1.2, "😐": -0.4, "😑": -0.4
+    "pecho frío": -1.8, "burro": -1.3, "morfón": -1.6, "amargo": -1.5,
+    "cabaret": -1.2, "abandonamos": -1.3, "equipo sin alma": -1.6,
+    "cagón": -1.7, "ladrones": -1.6, "chorros": -1.6,
+    "nos robaron": -1.7, "vendehumo": -1.5, "horrible": -1.4,
+    "sin huevos": -1.5, "asco": -1.6, "desastre": -1.5,
+    "muertos": -1.6, "dan lástima": -1.5, "sin actitud": -1.3,
+    "no se puede creer": -1.1, "regalamos el partido": -1.4,
+    "desastroso": -1.5, "impresentable": -1.5, "sos un fantasma": -1.4,
+    "le quedó grande": -1.3
 }
 
-PALABRAS_NEGACION_MVP = [
-    "no", "ni", "nunca", "jamas", "jamás", "tampoco", "sin", "nadie"
-]
+PALABRAS_NEGACION_MVP = ["no", "ni", "nunca", "jamas", "jamás", "tampoco", "sin", "nadie"]
 
 # --- Diccionario para Detección de Equipos MVP ---
 EQUIPOS_MVP_COMPLETO = {
@@ -323,100 +302,104 @@ def analyze_sentiment_mvp(text_to_analyze):
     Analiza el sentimiento de un texto usando diccionarios de palabras clave y manejo básico de negaciones.
     Prioriza frases más largas sobre palabras individuales.
     """
-    if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
-        return {"label": "neutral", "score": 0.0}
+    try:
+        if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
+            logging.info("Análisis de sentimiento: texto vacío o no válido, retornando neutral")
+            return {"label": "neutral", "score": 0.0}
 
-    text_lower = text_to_analyze.lower() # Normalizar a minúsculas una vez
-    total_score = 0.0
-    
-    # Combinar diccionarios y ordenar por longitud de clave (descendente) para priorizar frases
-    # Esto es crucial para que "no puede ser" se detecte antes que "no" o "puede" o "ser" individualmente.
-    # Los emojis suelen ser de longitud 1, por lo que se procesarán después de frases más largas.
-    
-    # Pre-procesar diccionarios para tener una lista única de tuplas (frase, score)
-    # y ordenarla por longitud de la frase, de más larga a más corta.
-    # Esto asegura que "no puede ser" se revise antes que "puede ser" o "no".
-    
-    sentiment_terms = []
-    for term, score in DICCIONARIO_POSITIVAS_MVP.items():
-        sentiment_terms.append((term.lower(), score))
-    for term, score in DICCIONARIO_NEGATIVAS_MVP.items():
-        sentiment_terms.append((term.lower(), score))
-    
-    # Ordenar por longitud de la frase (clave[0]) de forma descendente
-    sentiment_terms.sort(key=lambda x: len(x[0]), reverse=True)
-
-    # Para el manejo de negaciones, dividimos el texto en "palabras" para chequear la anterior.
-    # Una tokenización simple es suficiente para este propósito en el MVP.
-    # Es importante notar que la búsqueda de frases se hace sobre `text_lower` completo.
-    # La tokenización aquí es solo para el contexto de negación.
-    words_for_negation_check = text_lower.split()
-    
-    # Iterar sobre el texto buscando los términos del diccionario
-    # Para evitar contar múltiples veces la misma sección de texto si hay solapamientos
-    # y para manejar correctamente la negación, este bucle es más complejo.
-    # Enfoque MVP simplificado: buscar cada término y si se encuentra, añadir su score.
-    # Este enfoque no maneja bien solapamientos complejos ni negaciones de frases largas perfectamente,
-    # pero es un punto de partida para el MVP.
-
-    processed_text = text_lower # Hacemos una copia para ir "consumiendo" las partes procesadas
-    
-    for term, score in sentiment_terms:
-        term_len = len(term)
-        # Buscar todas las ocurrencias no solapadas del término
-        start_index = 0
-        while start_index < len(processed_text):
-            found_pos = processed_text.find(term, start_index)
-            if found_pos == -1: # No más ocurrencias de este término
-                break
-
-            # Verificar negación (simplificado para MVP)
-            # Buscar la palabra que precede inmediatamente al término encontrado.
-            # Esto es una aproximación. Una negación puede estar más lejos o ser más compleja.
-            negation_multiplier = 1.0
-            # Encontrar la "palabra" que precede a `found_pos` en el texto original tokenizado
-            # Esto es heurístico y puede no ser perfecto.
-            # Ejemplo: "yo no creo que sea muy bueno". "bueno" está negado por "no".
-            # Si el término es una frase, como "muy bueno", necesitamos ser más cuidadosos.
-            
-            # Heurística simple para negación: buscar una palabra de negación en una ventana pequeña antes del término.
-            # Considerar las 2 palabras antes del inicio del término encontrado.
-            # Se busca en `text_lower` original, no en `processed_text` que se modifica.
-            preceding_text_window_start = max(0, found_pos - (max(len(w) for w in PALABRAS_NEGACION_MVP) + len(term) + 5)) # Ventana antes
-            preceding_text_for_negation = text_lower[preceding_text_window_start:found_pos]
-            
-            # Dividir esta ventana en palabras y chequear las últimas (ej. 2 palabras)
-            potential_negators = preceding_text_for_negation.split()
-            if len(potential_negators) > 0:
-                # Chequear la última o las dos últimas palabras en la ventana
-                words_to_check_for_negation = potential_negators[-2:] # Tomar las últimas dos palabras
-                for neg_word in PALABRAS_NEGACION_MVP:
-                    if neg_word in words_to_check_for_negation:
-                        # Si encontramos una palabra de negación cerca y antes del término.
-                        # Cuidado: esto podría negar incorrectamente si hay estructuras complejas.
-                        # ej: "no es malo, es bueno". "bueno" no debería ser negado aquí por el "no" anterior.
-                        # Para el MVP, asumimos una negación simple si está cerca y antes.
-                        negation_multiplier = -1.0
-                        break # Encontramos una negación, no necesitamos seguir buscando en esta ventana.
-            
-            total_score += score * negation_multiplier
-            
-            # "Consumir" el término encontrado para evitar re-procesarlo con términos más cortos o solapados.
-            # Reemplazamos el término con espacios para mantener longitudes y posiciones relativas
-            # para futuros `find` en esta iteración, aunque es una simplificación.
-            processed_text = processed_text[:found_pos] + (' ' * term_len) + processed_text[found_pos + term_len:]
-            start_index = found_pos + term_len # Continuar la búsqueda después de este término
-
-    # Determinar etiqueta basada en el score total
-    # Ajustar umbrales si es necesario
-    if total_score > 0.15: # Umbral ligeramente > 0 para ser positivo
-        label = "positive"
-    elif total_score < -0.15: # Umbral ligeramente < 0 para ser negativo
-        label = "negative"
-    else:
-        label = "neutral"
+        text_lower = text_to_analyze.lower() # Normalizar a minúsculas una vez
+        total_score = 0.0
         
-    return {"label": label, "score": round(total_score, 2)}
+        # Registrar información de depuración para ver la longitud del texto
+        logging.info(f"Analizando sentimiento para texto de {len(text_lower)} caracteres")
+        
+        # Pre-procesar diccionarios para tener una lista única de tuplas (frase, score)
+        sentiment_terms = []
+        for term, score in DICCIONARIO_POSITIVAS_MVP.items():
+            sentiment_terms.append((term.lower(), score))
+        for term, score in DICCIONARIO_NEGATIVAS_MVP.items():
+            sentiment_terms.append((term.lower(), score))
+        
+        # Ordenar por longitud de la frase (clave[0]) de forma descendente
+        sentiment_terms.sort(key=lambda x: len(x[0]), reverse=True)
+        logging.debug(f"Preparados {len(sentiment_terms)} términos para análisis de sentimiento")
+
+        # Para el manejo de negaciones, dividimos el texto en "palabras" para chequear la anterior.
+        words_for_negation_check = text_lower.split()
+        
+        processed_text = text_lower # Hacemos una copia para ir "consumiendo" las partes procesadas
+        
+        # Limitar el número máximo de términos para prevenir bucles extremadamente largos
+        max_iterations = 1000
+        iteration_count = 0
+        
+        for term, score in sentiment_terms:
+            # Verificar si hemos excedido el límite de iteraciones para prevenir bucles infinitos
+            iteration_count += 1
+            if iteration_count > max_iterations:
+                logging.warning(f"Se alcanzó el límite de {max_iterations} iteraciones en análisis de sentimiento")
+                break
+                
+            term_len = len(term)
+            # Buscar todas las ocurrencias no solapadas del término
+            start_index = 0
+            # Establecer un límite para el bucle interno también
+            max_inner_iterations = 100
+            inner_iteration = 0
+            
+            while start_index < len(processed_text) and inner_iteration < max_inner_iterations:
+                inner_iteration += 1
+                found_pos = processed_text.find(term, start_index)
+                if found_pos == -1: # No más ocurrencias de este término
+                    break
+
+                # Verificar negación (simplificado para MVP)
+                negation_multiplier = 1.0
+                
+                # Hacer más robusto el cálculo del inicio de la ventana
+                preceding_text_window_start = max(0, found_pos - min(50, found_pos))  # Usar una ventana fija máxima
+                preceding_text_for_negation = text_lower[preceding_text_window_start:found_pos]
+                
+                # Dividir esta ventana en palabras y chequear las últimas
+                potential_negators = preceding_text_for_negation.split()
+                if len(potential_negators) > 0:
+                    # Verificar solo las últimas 3 palabras para evitar problemas con textos muy largos
+                    words_to_check_for_negation = potential_negators[-3:] 
+                    for neg_word in PALABRAS_NEGACION_MVP:
+                        if neg_word in words_to_check_for_negation:
+                            negation_multiplier = -1.0
+                            break
+            
+                total_score += score * negation_multiplier
+                
+                # "Consumir" el término encontrado para evitar re-procesarlo
+                try:
+                    processed_text = processed_text[:found_pos] + (' ' * term_len) + processed_text[found_pos + term_len:]
+                    start_index = found_pos + term_len
+                except Exception as e:
+                    logging.error(f"Error al procesar texto en posición {found_pos}: {e}")
+                    # En caso de error, avanzar para evitar bucle infinito
+                    start_index = len(processed_text)
+
+            # Si el bucle interno alcanzó su límite, registrarlo
+            if inner_iteration >= max_inner_iterations:
+                logging.warning(f"Bucle interno alcanzó límite de {max_inner_iterations} para el término '{term}'")
+
+        # Determinar etiqueta basada en el score total
+        if total_score > 0.15:
+            label = "positive"
+        elif total_score < -0.15:
+            label = "negative"
+        else:
+            label = "neutral"
+            
+        logging.info(f"Análisis completado con éxito. Score: {total_score}, Label: {label}")
+        return {"label": label, "score": round(total_score, 2)}
+        
+    except Exception as e:
+        logging.error(f"Error en análisis de sentimiento: {e}", exc_info=True)
+        # En caso de error, devolver un valor por defecto
+        return {"label": "neutral", "score": 0.0, "error": str(e)}
 
 def detect_mentioned_teams_mvp(text_to_analyze, equipos_dict):
     """
@@ -427,49 +410,98 @@ def detect_mentioned_teams_mvp(text_to_analyze, equipos_dict):
     Si se ha activado el contexto específico de partido, dará prioridad a los equipos
     del partido actual.
     """
-    if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
-        return []
-    if not equipos_dict:
-        return []
+    try:
+        if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
+            logging.info("detect_mentioned_teams_mvp: texto vacío o no válido, retornando lista vacía")
+            return []
+        if not equipos_dict:
+            logging.warning("detect_mentioned_teams_mvp: diccionario de equipos vacío, retornando lista vacía")
+            return []
 
-    text_lower = text_to_analyze.lower()
-    found_teams_canonical_names = set()
+        logging.info(f"Buscando equipos mencionados en texto de {len(text_to_analyze)} caracteres")
+        text_lower = text_to_analyze.lower()
+        found_teams_canonical_names = set()
 
-    # Chequeo especial para equipos del contexto si está activado
-    if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
-        priority_teams = [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
-        for team_name in priority_teams:
-            if team_name in equipos_dict:
-                for alias in equipos_dict[team_name]:
-                    alias_lower = alias.lower()
-                    try:
-                        pattern = r'\b' + re.escape(alias_lower) + r'\b'
-                        if re.search(pattern, text_lower):
-                            found_teams_canonical_names.add(team_name)
-                            break
-                    except re.error as e:
-                        logging.warning(f"Error de regex para alias '{alias_lower}' del equipo '{team_name}': {e}")
-                        continue
+        # Chequeo especial para equipos del contexto si está activado
+        if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+            logging.debug(f"Contexto de partido activado: {MATCH_HOME_TEAM} vs {MATCH_AWAY_TEAM}")
+            priority_teams = [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
+            for team_name in priority_teams:
+                if team_name in equipos_dict:
+                    for alias in equipos_dict[team_name]:
+                        try:
+                            alias_lower = alias.lower()
+                            pattern = r'\b' + re.escape(alias_lower) + r'\b'
+                            if re.search(pattern, text_lower):
+                                found_teams_canonical_names.add(team_name)
+                                logging.debug(f"Encontrado equipo prioritario: {team_name} (alias: {alias_lower})")
+                                break
+                        except re.error as e:
+                            logging.warning(f"Error de regex para alias '{alias_lower}' del equipo '{team_name}': {e}")
+                            continue
+                        except Exception as e:
+                            logging.error(f"Error inesperado al buscar alias '{alias}' del equipo '{team_name}': {e}")
+                            continue
+            
+            # Si ya encontramos equipos en el contexto, retornamos inmediatamente
+            if found_teams_canonical_names:
+                logging.info(f"Equipos encontrados en contexto prioritario: {', '.join(found_teams_canonical_names)}")
+                # Transformar los nombres canónicos en la estructura de diccionario esperada
+                result = []
+                for team_canonical_name in found_teams_canonical_names:
+                    result.append({"name": team_canonical_name})
+                return result
         
-        # Si ya encontramos equipos en el contexto, retornamos inmediatamente
-        # ya que estos tienen máxima prioridad
-        if found_teams_canonical_names:
-            return list(found_teams_canonical_names)
-    
-    # Procesamiento normal para todos los equipos (o si no se encontraron equipos del contexto)
-    for canonical_name, aliases in equipos_dict.items():
-        for alias in aliases:
-            alias_lower = alias.lower()
-            try:
-                pattern = r'\b' + re.escape(alias_lower) + r'\b'
-                if re.search(pattern, text_lower):
-                    found_teams_canonical_names.add(canonical_name)
-                    break
-            except re.error as e:
-                logging.warning(f"Error de regex para alias '{alias_lower}' del equipo '{canonical_name}': {e}")
-                continue
+        # Procesamiento normal para todos los equipos (o si no se encontraron equipos del contexto)
+        # Limitar el número de equipos a verificar para prevenir problemas de rendimiento
+        max_teams = 50  # Limitar a un número razonable en caso de diccionarios muy grandes
+        team_count = 0
+        
+        for canonical_name, aliases in equipos_dict.items():
+            team_count += 1
+            if team_count > max_teams:
+                logging.warning(f"Se alcanzó el límite de {max_teams} equipos verificados")
+                break
                 
-    return list(found_teams_canonical_names)
+            # Limitar el número de alias por equipo también
+            max_aliases = 30
+            alias_count = 0
+            
+            for alias in aliases:
+                alias_count += 1
+                if alias_count > max_aliases:
+                    logging.debug(f"Se omitieron algunos alias para {canonical_name} (límite: {max_aliases})")
+                    break
+                    
+                try:
+                    alias_lower = alias.lower()
+                    pattern = r'\b' + re.escape(alias_lower) + r'\b'
+                    if re.search(pattern, text_lower):
+                        found_teams_canonical_names.add(canonical_name)
+                        logging.debug(f"Encontrado equipo: {canonical_name} (alias: {alias_lower})")
+                        break
+                except re.error as e:
+                    logging.warning(f"Error de regex para alias '{alias_lower}' del equipo '{canonical_name}': {e}")
+                    continue
+                except Exception as e:
+                    logging.error(f"Error inesperado al buscar alias '{alias}' del equipo '{canonical_name}': {e}")
+                    continue
+                    
+        # Transformar los nombres canónicos en la estructura de diccionario esperada
+        result = []
+        for team_canonical_name in found_teams_canonical_names:
+            result.append({"name": team_canonical_name})
+            
+        if result:
+            logging.info(f"Total equipos encontrados: {len(result)}")
+        else:
+            logging.info("No se encontraron equipos mencionados")
+            
+        return result
+        
+    except Exception as e:
+        logging.error(f"Error general en detect_mentioned_teams_mvp: {e}", exc_info=True)
+        return []  # En caso de error, devolver una lista vacía
 
 def detect_mentioned_players_mvp(text_to_analyze):
     """
@@ -480,131 +512,246 @@ def detect_mentioned_players_mvp(text_to_analyze):
     Si se ha activado el contexto específico de partido, solo considerará jugadores
     de los equipos participantes, evitando falsos positivos.
     """
-    if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
-        return []
-    if not JUGADORES_MVP:
-        logging.warning("Diccionario JUGADORES_MVP vacío. No es posible la detección de jugadores.")
-        return []
+    try:
+        if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
+            logging.info("detect_mentioned_players_mvp: texto vacío o no válido, retornando lista vacía")
+            return []
+        if not JUGADORES_MVP:
+            logging.warning("Diccionario JUGADORES_MVP vacío. No es posible la detección de jugadores.")
+            return []
 
-    text_lower = text_to_analyze.lower()
-    found_players = []
+        logging.info(f"Buscando jugadores mencionados en texto de {len(text_to_analyze)} caracteres")
+        text_lower = text_to_analyze.lower()
+        found_players = []
 
-    # Verificamos primero si se menciona algún equipo - útil para desambiguación
-    mentioned_teams = detect_mentioned_teams_mvp(text_lower, EQUIPOS_MVP)
-
-    for canonical_name, player_info in JUGADORES_MVP.items():
-        aliases = player_info.get('aliases', [])
-        equipo_actual = player_info.get('equipo_actual', '')
+        # Verificamos primero si se menciona algún equipo - útil para desambiguación
+        # Para evitar una recursión potencialmente problemática, vamos a extraer los equipos mencionados directamente
+        mentioned_teams = []
+        mentioned_team_names = []
         
-        # Si estamos en contexto de partido y hay equipos mencionados,
-        # verificamos si este jugador pertenece a alguno de ellos para priorizar
-        if MATCH_CONTEXT_ENABLED and mentioned_teams:
-            # Si el jugador no pertenece a ningún equipo mencionado en el texto,
-            # y tampoco a los equipos del partido, le damos menor prioridad
-            player_team_mentioned = equipo_actual in mentioned_teams
-            player_in_match_teams = equipo_actual in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
-            
-            if not (player_team_mentioned or player_in_match_teams):
-                continue  # Omitir jugadores que no están en el contexto relevante
+        try:
+            # Usamos detect_mentioned_teams_mvp pero con manejo de errores específico
+            mentioned_teams = detect_mentioned_teams_mvp(text_lower, EQUIPOS_MVP)
+            mentioned_team_names = [team["name"] for team in mentioned_teams] if mentioned_teams else []
+            logging.debug(f"Equipos mencionados para detección de jugadores: {', '.join(mentioned_team_names) if mentioned_team_names else 'ninguno'}")
+        except Exception as e:
+            logging.error(f"Error al detectar equipos para contexto de jugadores: {e}")
+            # Continuamos con lista vacía en caso de error
+
+        # Limitar el número máximo de jugadores a verificar
+        max_players = 100  # Limitar a un número razonable en caso de diccionarios muy grandes
+        player_count = 0
         
-        for alias in aliases:
-            alias_lower = alias.lower()
+        for canonical_name, player_info in JUGADORES_MVP.items():
+            player_count += 1
+            if player_count > max_players:
+                logging.warning(f"Se alcanzó el límite de {max_players} jugadores verificados")
+                break
+                
             try:
-                pattern = r'\b' + re.escape(alias_lower) + r'\b'
-                if re.search(pattern, text_lower):
-                    # Añadir jugador con su información si no está ya en la lista
-                    player_obj = {
-                        "nombre_canonico": canonical_name,
-                        "equipo": equipo_actual
-                    }
-                    if player_obj not in found_players:  # Evitar duplicados
-                        found_players.append(player_obj)
-                    break  # Si ya encontramos un alias para este jugador, pasamos al siguiente
-            except re.error as e:
-                logging.warning(f"Error de regex para alias '{alias_lower}' del jugador '{canonical_name}': {e}")
+                aliases = player_info.get('aliases', [])
+                equipo_actual = player_info.get('equipo_actual', '')
+                
+                # Si estamos en contexto de partido y hay equipos mencionados,
+                # verificamos si este jugador pertenece a alguno de ellos para priorizar
+                if MATCH_CONTEXT_ENABLED and mentioned_team_names:
+                    # Si el jugador no pertenece a ningún equipo mencionado en el texto,
+                    # y tampoco a los equipos del partido, le damos menor prioridad
+                    player_team_mentioned = equipo_actual in mentioned_team_names
+                    player_in_match_teams = equipo_actual in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
+                    
+                    if not (player_team_mentioned or player_in_match_teams):
+                        continue  # Omitir jugadores que no están en el contexto relevante
+                
+                # Limitar el número de alias por jugador
+                max_aliases = 20
+                alias_count = 0
+                
+                for alias in aliases:
+                    alias_count += 1
+                    if alias_count > max_aliases:
+                        logging.debug(f"Se omitieron algunos alias para {canonical_name} (límite: {max_aliases})")
+                        break
+                        
+                    try:
+                        alias_lower = alias.lower()
+                        pattern = r'\b' + re.escape(alias_lower) + r'\b'
+                        if re.search(pattern, text_lower):
+                            # Añadir jugador con su información si no está ya en la lista
+                            player_obj = {
+                                "name": canonical_name,
+                                "team": equipo_actual
+                            }
+                            if player_obj not in found_players:  # Evitar duplicados
+                                found_players.append(player_obj)
+                                logging.debug(f"Encontrado jugador: {canonical_name} (alias: {alias_lower})")
+                            break  # Si ya encontramos un alias para este jugador, pasamos al siguiente
+                    except re.error as e:
+                        logging.warning(f"Error de regex para alias '{alias_lower}' del jugador '{canonical_name}': {e}")
+                        continue
+                    except Exception as e:
+                        logging.error(f"Error inesperado al buscar alias '{alias}' del jugador '{canonical_name}': {e}")
+                        continue
+            except Exception as e:
+                logging.error(f"Error procesando jugador {canonical_name}: {e}")
                 continue
-    
-    # Desambiguación: si tenemos jugadores de diferentes equipos y algunos son del contexto del partido,
-    # y otros no, priorizamos los del partido
-    if MATCH_CONTEXT_ENABLED and found_players and len(found_players) > 1:
-        match_team_players = [p for p in found_players if p.get('equipo') in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]]
-        if match_team_players:
-            return match_team_players
-    
-    return found_players
+        
+        # Desambiguación: si tenemos jugadores de diferentes equipos y algunos son del contexto del partido,
+        # y otros no, priorizamos los del partido
+        if MATCH_CONTEXT_ENABLED and found_players and len(found_players) > 1:
+            try:
+                match_team_players = [p for p in found_players if p.get('team') in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]]
+                if match_team_players:
+                    logging.info(f"Aplicando desambiguación: {len(match_team_players)} jugadores del partido de {len(found_players)} detectados")
+                    return match_team_players
+            except Exception as e:
+                logging.error(f"Error durante desambiguación de jugadores: {e}")
+                # Continuamos con todos los jugadores en caso de error
+        
+        if found_players:
+            logging.info(f"Total jugadores encontrados: {len(found_players)}")
+        else:
+            logging.info("No se encontraron jugadores mencionados")
+            
+        return found_players
+        
+    except Exception as e:
+        logging.error(f"Error general en detect_mentioned_players_mvp: {e}", exc_info=True)
+        return []  # En caso de error, devolver una lista vacía
 
 def process_message(message_id, message_data):
     """Procesa un único mensaje del stream: deserializa, valida y enriquece."""
     try:
+        msg_id_str = message_id.decode() if isinstance(message_id, bytes) else message_id
+        logging.info(f"🔄 INICIANDO PROCESAMIENTO DEL MENSAJE: {msg_id_str}")
+        
         # El payload del mensaje es una cadena JSON
         comment_payload_str = message_data.get('payload')
         if not comment_payload_str:
-            logging.warning(f"Mensaje {message_id} no tiene campo 'payload'. Omitiendo.")
+            logging.warning(f"❌ Mensaje {msg_id_str} no tiene campo 'payload'. Omitiendo.")
             return None
 
-        comment_dict = json.loads(comment_payload_str)
-
-        # Validar campos esperados
+        # Log para depuración
+        logging.info(f"📦 PAYLOAD RECIBIDO: {comment_payload_str[:100]}...")
+        
+        # Paso 1: Decodificar JSON
+        comment_dict = {}
+        try:
+            comment_dict = json.loads(comment_payload_str)
+        except json.JSONDecodeError as e:
+            logging.error(f"❌ Error al decodificar JSON para mensaje {msg_id_str}: {e}. Payload: {comment_payload_str[:200]}... Omitiendo.")
+            return None
+        
+        # Paso 2: Validar campos esperados
         missing_fields = [field for field in EXPECTED_FIELDS if field not in comment_dict]
         if missing_fields:
-            logging.warning(f"Mensaje {message_id} (source_comment_id: {comment_dict.get('source_comment_id', 'N/A')}) le faltan campos: {missing_fields}. Omitiendo.")
+            logging.warning(f"⚠️ Mensaje {msg_id_str} (source_comment_id: {comment_dict.get('source_comment_id', 'N/A')}) le faltan campos: {missing_fields}. Omitiendo.")
             return None
 
-        # Enriquecimiento
-        comment_dict["internal_comment_id"] = str(uuid.uuid4())
-        comment_dict["processing_timestamp_utc"] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
-        comment_dict["cleaned_text"] = clean_text(comment_dict.get("original_text"))
+        # Paso 3: Mostrar el texto original para depuración
+        original_text = comment_dict.get("original_text", "")
+        logging.info(f"📝 TEXTO ORIGINAL: '{original_text}'")
+
+        # Paso 4: Enriquecimiento básico
+        try:
+            comment_dict["internal_comment_id"] = str(uuid.uuid4())
+            comment_dict["processing_timestamp_utc"] = datetime.now(timezone.utc).strftime('%Y-%m-%dT%H:%M:%S.%f')[:-3] + 'Z'
+            comment_dict["cleaned_text"] = clean_text(comment_dict.get("original_text", ""))
+            
+            if not comment_dict["cleaned_text"]:
+                logging.warning(f"⚠️ Mensaje {msg_id_str} tiene texto limpio vacío después de procesamiento.")
+                # Continuamos con texto vacío, pero advertimos
+        except Exception as e:
+            logging.error(f"❌ Error en enriquecimiento básico: {e}", exc_info=True)
+            # Si falla este paso, podríamos aún procesar con valores por defecto
+            if "cleaned_text" not in comment_dict:
+                comment_dict["cleaned_text"] = ""
         
-        # --- Análisis de Sentimiento MVP ---
-        if comment_dict["cleaned_text"]: # Solo analizar si hay texto limpio
-            sentiment_result = analyze_sentiment_mvp(comment_dict["cleaned_text"])
-            comment_dict["sentiment_analysis"] = sentiment_result
-        else:
-            comment_dict["sentiment_analysis"] = {"label": "neutral", "score": 0.0} # Default si no hay texto
+        # Paso 5: Análisis de Sentimiento MVP - con manejo de errores
+        try:
+            if comment_dict.get("cleaned_text"): # Solo analizar si hay texto limpio
+                logging.info(f"🧹 TEXTO LIMPIO: '{comment_dict['cleaned_text']}'")
+                sentiment_result = analyze_sentiment_mvp(comment_dict["cleaned_text"])
+                comment_dict["sentiment_analysis"] = sentiment_result
+                logging.info(f"😀 SENTIMIENTO: {sentiment_result['label']} (score: {sentiment_result['score']})")
+            else:
+                comment_dict["sentiment_analysis"] = {"label": "neutral", "score": 0.0} # Default si no hay texto
+                logging.info("⚠️ SIN TEXTO PARA ANALIZAR SENTIMIENTO - usando neutral")
+        except Exception as e:
+            logging.error(f"❌ Error en análisis de sentimiento: {e}", exc_info=True)
+            comment_dict["sentiment_analysis"] = {"label": "neutral", "score": 0.0, "error": str(e)}
         # --- Fin Análisis de Sentimiento ---
 
-        # --- Detección de Equipos MVP ---
-        if comment_dict["cleaned_text"]:
-            mentioned_teams = detect_mentioned_teams_mvp(comment_dict["cleaned_text"], EQUIPOS_MVP)
-            comment_dict["mentioned_teams"] = mentioned_teams
-        else:
-            comment_dict["mentioned_teams"] = [] # Default si no hay texto
+        # Paso 6: Detección de Equipos MVP
+        try:
+            if comment_dict.get("cleaned_text"):
+                mentioned_teams = detect_mentioned_teams_mvp(comment_dict["cleaned_text"], EQUIPOS_MVP)
+                comment_dict["mentioned_teams"] = mentioned_teams
+                if mentioned_teams:
+                    logging.info(f"⚽ EQUIPOS MENCIONADOS: {', '.join([team['name'] for team in mentioned_teams])}")
+                else:
+                    logging.info("⚽ NO SE DETECTARON EQUIPOS")
+            else:
+                comment_dict["mentioned_teams"] = [] # Default si no hay texto
+        except Exception as e:
+            logging.error(f"❌ Error en detección de equipos: {e}", exc_info=True)
+            comment_dict["mentioned_teams"] = []
         # --- Fin Detección de Equipos ---
 
-        # --- Detección de Jugadores MVP ---
-        if comment_dict["cleaned_text"]:
-            mentioned_players = detect_mentioned_players_mvp(comment_dict["cleaned_text"])
-            comment_dict["mentioned_players"] = mentioned_players
-        else:
-            comment_dict["mentioned_players"] = [] # Default si no hay texto
+        # Paso 7: Detección de Jugadores MVP
+        try:
+            if comment_dict.get("cleaned_text"):
+                mentioned_players = detect_mentioned_players_mvp(comment_dict["cleaned_text"])
+                comment_dict["mentioned_players"] = mentioned_players
+                if mentioned_players:
+                    logging.info(f"👤 JUGADORES MENCIONADOS: {', '.join([player['name'] for player in mentioned_players])}")
+                else:
+                    logging.info("👤 NO SE DETECTARON JUGADORES")
+            else:
+                comment_dict["mentioned_players"] = [] # Default si no hay texto
+        except Exception as e:
+            logging.error(f"❌ Error en detección de jugadores: {e}", exc_info=True)
+            comment_dict["mentioned_players"] = []
         # --- Fin Detección de Jugadores ---
 
-        # --- Información del Contexto (si está habilitado) ---
-        if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
-            comment_dict["match_context"] = {
-                "home_team": MATCH_HOME_TEAM,
-                "away_team": MATCH_AWAY_TEAM
-            }
+        # Paso 8: Información del Contexto (si está habilitado)
+        try:
+            if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+                comment_dict["match_context"] = {
+                    "home_team": MATCH_HOME_TEAM,
+                    "away_team": MATCH_AWAY_TEAM
+                }
+        except Exception as e:
+            logging.error(f"❌ Error al agregar contexto de partido: {e}")
+            # No es crítico, el procesamiento puede continuar sin contexto
         # --- Fin Información del Contexto ---
 
-        logging.info(f"Mensaje {message_id} procesado exitosamente (internal_id: {comment_dict['internal_comment_id']})")
+        logging.info(f"✅ Mensaje {msg_id_str} procesado exitosamente (internal_id: {comment_dict['internal_comment_id']})")
         return comment_dict
 
     except json.JSONDecodeError as e:
-        logging.error(f"Error al decodificar JSON para mensaje {message_id}: {e}. Payload: {comment_payload_str[:200]}... Omitiendo.")
+        logging.error(f"❌ Error al decodificar JSON para mensaje {message_id}: {e}. Payload: {comment_payload_str[:200] if 'comment_payload_str' in locals() else 'N/A'}... Omitiendo.")
         return None
     except Exception as e:
-        logging.error(f"Error inesperado al procesar mensaje {message_id}: {e}", exc_info=True)
+        logging.error(f"❌ Error inesperado al procesar mensaje {message_id}: {e}", exc_info=True)
         return None
 
 def consume_and_process_comments(redis_client, stream_name, group_name, consumer_name):
     """Bucle principal para consumir y procesar comentarios del stream de Redis."""
-    logging.info(f"Starting consumer '{consumer_name}' for group '{group_name}' on stream '{stream_name}'. Waiting for messages...")
+    logging.info(f"✨ INICIANDO CONSUMIDOR '{consumer_name}' para grupo '{group_name}' en stream '{stream_name}'.")
+    logging.info(f"⏳ Esperando mensajes...")
+    
+    # Variables para seguimiento
+    total_messages_processed = 0
+    total_messages_failed = 0
+    batch_number = 0
 
     while True:
         try:
+            batch_number += 1
             # Leer mensajes del stream para este consumidor y grupo
             # '>' significa leer mensajes nuevos que no han sido entregados a otros consumidores del grupo
+            logging.info(f"👂 Escuchando nuevos mensajes en stream '{stream_name}' (lote #{batch_number})...")
             messages = redis_client.xreadgroup(
                 groupname=group_name,
                 consumername=consumer_name,
@@ -615,51 +762,71 @@ def consume_and_process_comments(redis_client, stream_name, group_name, consumer
 
             if not messages:
                 # No hay mensajes nuevos después del tiempo de bloqueo, el bucle continúa y reintenta
-                logging.debug("No new messages received, continuing to listen...")
+                logging.info(f"😴 No se recibieron mensajes nuevos después de {BLOCK_MILLISECONDS/1000:.1f} segundos, continuando escucha...")
                 continue
 
             # messages es una lista de tuplas: [(stream_name, [(message_id, message_data_dict)])]
             for stream, message_list in messages:
+                stream_name_str = stream.decode() if isinstance(stream, bytes) else stream
+                logging.info(f"📨 Recibidos {len(message_list)} mensajes del stream '{stream_name_str}'")
+                
                 message_ids_to_ack = []
                 for message_id, message_data in message_list:
-                    logging.debug(f"Received message {message_id} from stream {stream.decode() if isinstance(stream, bytes) else stream}")
+                    msg_id_str = message_id.decode() if isinstance(message_id, bytes) else message_id
+                    logging.info(f"📩 Procesando mensaje {msg_id_str} (Total hasta ahora: {total_messages_processed + len(message_ids_to_ack) + 1})")
                     
-                    enriched_comment = process_message(message_id, message_data)
+                    # Imprimir datos brutos del mensaje para diagnóstico
+                    logging.debug(f"DATOS DEL MENSAJE {msg_id_str}: {message_data}")
+                    
+                    try:
+                        # Procesamos el mensaje con un tiempo límite implícito (sin bloquear el loop principal)
+                        enriched_comment = process_message(message_id, message_data)
 
-                    if enriched_comment:
-                        # Por ahora, solo imprimir el comentario enriquecido
-                        # En el futuro, esto podría enviarse a otro stream, base de datos, WebSocket, etc.
-                        print(json.dumps(enriched_comment, indent=2, ensure_ascii=False))
+                        if enriched_comment:
+                            # Por ahora, solo imprimir el comentario enriquecido
+                            enriched_json = json.dumps(enriched_comment, indent=2, ensure_ascii=False)
+                            print("\n" + "="*80)
+                            print(f"COMENTARIO PROCESADO #{total_messages_processed + 1}:")
+                            print("="*80)
+                            print(enriched_json)
+                            print("="*80 + "\n")
+                            
+                            message_ids_to_ack.append(message_id)
+                            total_messages_processed += 1
+                            logging.info(f"✅ Mensaje {msg_id_str} procesado correctamente. Total exitosos: {total_messages_processed}")
+                        else:
+                            # El mensaje no pudo ser procesado, pero aún así hacemos ACK
+                            # Para evitar que quede pendiente indefinidamente
+                            if message_data.get('payload'): # Solo si hubo payload para intentar procesar
+                                message_ids_to_ack.append(message_id)
+                                logging.warning(f"⚠️ Mensaje {msg_id_str} no pudo ser procesado pero se reconoce (ACK)")
+                                total_messages_failed += 1
+                    except Exception as e:
+                        logging.error(f"❌ Error inesperado procesando mensaje {msg_id_str}: {e}", exc_info=True)
+                        # Aún con error, hacemos ACK para evitar que quede pendiente
                         message_ids_to_ack.append(message_id)
-                    else:
-                        # Si process_message devuelve None, significa que el mensaje no se pudo procesar o se omitió.
-                        # Podríamos decidir si hacer ACK de todas formas para quitarlo de la cola de pendientes (PEL)
-                        # o dejarlo para una futura inspección/reintento manual.
-                        # Por simplicidad MVP, si no se procesa bien, no se hace ACK explícito aquí, 
-                        # pero tampoco se reintenta automáticamente en este bucle.
-                        # Un mensaje no procesado y sin ACK permanecerá en la PEL (Pending Entries List)
-                        # hasta que sea reclamado o se haga ACK de alguna forma.
-                        # Para el MVP, asumimos que si hay un error grave, se registra y el mensaje se omite.
-                        # Si el mensaje fue simplemente "omitido" por una validación fallida, aún es bueno hacer ACK.
-                        # Modificación: Haremos ACK incluso si se omite por validación para no dejarlo pendiente.
-                        if message_data.get('payload'): # Solo si hubo payload para intentar procesar
-                             message_ids_to_ack.append(message_id)
+                        total_messages_failed += 1
 
+                # Intentar hacer ACK de todos los mensajes procesados o con error
                 if message_ids_to_ack:
-                    # Acusar recibo de los mensajes procesados (o conscientemente omitidos)
-                    ack_result = redis_client.xack(stream_name, group_name, *message_ids_to_ack)
-                    logging.info(f"Acknowledged {ack_result} messages: {message_ids_to_ack}")
+                    try:
+                        # Acusar recibo de los mensajes procesados (o conscientemente omitidos)
+                        ack_result = redis_client.xack(stream_name, group_name, *message_ids_to_ack)
+                        logging.info(f"✅ ACK para {ack_result} mensajes. Resumen lote #{batch_number}: {len(message_ids_to_ack)} procesados, {total_messages_processed} exitosos total, {total_messages_failed} fallidos total.")
+                    except Exception as e:
+                        logging.error(f"❌ Error al hacer ACK de mensajes: {e}", exc_info=True)
+                        # Aquí podríamos implementar un reintento del ACK, pero por ahora solo registramos el error
 
         except redis.exceptions.RedisError as e:
-            logging.error(f"Redis error during consumption loop: {e}. Attempting to reconnect in 5s...")
+            logging.error(f"❌ Error de Redis durante el bucle de consumo: {e}. Intentando reconectar en 5s...")
             time.sleep(5)
             # Podríamos intentar reconectar aquí, pero por simplicidad, si la conexión se pierde de forma crítica,
             # el script podría necesitar reiniciarse. La librería redis-py maneja algunas reconexiones.
         except KeyboardInterrupt:
-            logging.info("Consumer process interrupted by user. Exiting...")
+            logging.info(f"🛑 Proceso interrumpido por el usuario. Total procesados: {total_messages_processed}, Fallidos: {total_messages_failed}. Saliendo...")
             break
         except Exception as e:
-            logging.error(f"Unexpected error in consumer loop: {e}", exc_info=True)
+            logging.error(f"❌ Error inesperado en el bucle principal: {e}", exc_info=True)
             # Esperar un poco antes de reintentar para evitar un bucle apretado en caso de errores persistentes
             time.sleep(5)
 

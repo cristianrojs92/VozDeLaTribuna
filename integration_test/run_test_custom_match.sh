@@ -36,7 +36,7 @@ echo "REDIS_STREAM_NAME=${REDIS_STREAM_NAME}"
 echo "REDIS_CONSUMER_GROUP_NAME=${REDIS_CONSUMER_GROUP_NAME}"
 
 # Crear un script de prueba personalizado
-TEST_SCRIPT="test_${HOME_ID}_${AWAY_ID}.py"
+TEST_SCRIPT="integration_test/test_${HOME_ID}_${AWAY_ID}.py"
 cat > "$TEST_SCRIPT" <<EOF
 #!/usr/bin/env python3
 """
@@ -125,7 +125,7 @@ echo "1. Script de prueba creado: $TEST_SCRIPT"
 echo ""
 echo "2. Abre una nueva terminal y ejecuta el procesador con estas variables:"
 echo "   cd /Users/cristian/Proyectos/VozDeLaTribuna"
-echo "   source run_test_custom_match.sh \"$HOME_TEAM\" \"$AWAY_TEAM\""
+echo "   source integration_test/run_test_custom_match.sh \"$HOME_TEAM\" \"$AWAY_TEAM\""
 echo "   python processors/comment_processor/comment_processor.py"
 echo ""
 echo "3. En otra terminal, ejecuta el script de prueba:"
