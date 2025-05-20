@@ -7,12 +7,19 @@ from datetime import datetime, timezone
 import logging
 import re # Para la limpieza de texto
 from dotenv import load_dotenv
+import glob # Para buscar archivos JSON de jugadores
 
 # Configurar logging básico (salida en inglés)
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(levelname)s - %(message)s')
 
 # Cargar variables de entorno desde el archivo .env
 load_dotenv()
+
+# --- Configuración Específica del Partido ---
+# Obtener equipos específicos para el partido actual desde variables de entorno
+MATCH_HOME_TEAM = os.getenv('MATCH_HOME_TEAM', '')
+MATCH_AWAY_TEAM = os.getenv('MATCH_AWAY_TEAM', '')
+MATCH_CONTEXT_ENABLED = os.getenv('MATCH_CONTEXT_ENABLED', 'true').lower() == 'true'
 
 # --- Diccionarios para Análisis de Sentimiento MVP ---
 DICCIONARIO_POSITIVAS_MVP = {
@@ -88,7 +95,7 @@ PALABRAS_NEGACION_MVP = [
 ]
 
 # --- Diccionario para Detección de Equipos MVP ---
-EQUIPOS_MVP = {
+EQUIPOS_MVP_COMPLETO = {
     "River Plate": ["river", "millo", "millonarios", "gallina", "gallinas", "la banda", "el más grande", "carp"],
     "Boca Juniors": ["boca", "xeneize", "bostero", "bosteros", "azul y oro", "la mitad más uno", "cabj"],
     "Independiente": ["independiente", "el rojo", "diablos rojos", "rey de copas", "orgullo nacional", "independiente de américa"],
@@ -172,6 +179,93 @@ EQUIPOS_MVP = {
     "Ituzaingó": ["ituzaingó", "león verde", "el verde"],
     "Luján": ["luján", "lujanero"]
 }
+
+# Diccionario que será utilizado en la detección - puede ser el completo o filtrado según el contexto
+EQUIPOS_MVP = {}
+
+# --- Carga de Diccionario de Jugadores MVP ---
+JUGADORES_MVP = {}  # Este diccionario se llenará con los datos cargados de los archivos JSON
+
+def load_players_dictionary(home_team=None, away_team=None):
+    """
+    Carga los diccionarios de jugadores. Si se especifican home_team y away_team,
+    solo carga los jugadores de esos equipos específicos.
+    
+    Args:
+        home_team (str, optional): Nombre canónico del equipo local
+        away_team (str, optional): Nombre canónico del equipo visitante
+    """
+    global JUGADORES_MVP, EQUIPOS_MVP
+    players_dir = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))), 
+                               'data', 'dictionaries', 'team_players')
+    
+    # Filtrar EQUIPOS_MVP si estamos en un contexto de partido específico
+    if MATCH_CONTEXT_ENABLED and home_team and away_team:
+        logging.info(f"Cargando contexto específico para el partido: {home_team} vs {away_team}")
+        # Filtrar EQUIPOS_MVP para incluir solo los equipos del partido
+        EQUIPOS_MVP_FILTRADO = {k: v for k, v in EQUIPOS_MVP_COMPLETO.items() 
+                              if k == home_team or k == away_team}
+        EQUIPOS_MVP = EQUIPOS_MVP_FILTRADO
+        
+        # Preparar para cargar solo archivos de los equipos relevantes
+        home_team_file = convert_team_name_to_filename(home_team)
+        away_team_file = convert_team_name_to_filename(away_team)
+        
+        json_files = [
+            os.path.join(players_dir, home_team_file),
+            os.path.join(players_dir, away_team_file)
+        ]
+        
+        logging.info(f"Buscando archivos de jugadores para: {home_team_file}, {away_team_file}")
+    else:
+        logging.info("Cargando todos los equipos y jugadores (sin contexto específico de partido)")
+        EQUIPOS_MVP = EQUIPOS_MVP_COMPLETO
+        json_files = glob.glob(os.path.join(players_dir, '*.json'))
+    
+    if not json_files:
+        logging.warning(f"No se encontraron archivos de diccionario de jugadores en {players_dir}")
+        return
+    
+    # Cargar archivos JSON
+    for json_file in json_files:
+        try:
+            if os.path.exists(json_file):
+                with open(json_file, 'r', encoding='utf-8') as f:
+                    team_players = json.load(f)
+                    JUGADORES_MVP.update(team_players)
+                logging.info(f"Cargado diccionario de jugadores desde {os.path.basename(json_file)}")
+            else:
+                logging.warning(f"Archivo de equipo no encontrado: {json_file}")
+        except Exception as e:
+            logging.error(f"Error al cargar diccionario de jugadores desde {json_file}: {e}")
+    
+    if MATCH_CONTEXT_ENABLED and home_team and away_team:
+        logging.info(f"Cargados {len(JUGADORES_MVP)} jugadores para el partido {home_team} vs {away_team}.")
+    else:
+        logging.info(f"Cargados {len(JUGADORES_MVP)} jugadores en total.")
+
+def convert_team_name_to_filename(team_name):
+    """
+    Convierte un nombre canónico de equipo al formato esperado para el nombre de archivo.
+    Ejemplo: "River Plate" -> "river_plate.json"
+    
+    Args:
+        team_name (str): Nombre canónico del equipo
+        
+    Returns:
+        str: Nombre de archivo esperado
+    """
+    if not team_name:
+        return ""
+        
+    return team_name.lower().replace(' ', '_').replace('(', '').replace(')', '').replace(',', '') + '.json'
+
+# Cargar los diccionarios de jugadores al inicio
+try:
+    load_players_dictionary(MATCH_HOME_TEAM, MATCH_AWAY_TEAM)
+except Exception as e:
+    logging.error(f"Error al cargar diccionarios de jugadores: {e}", exc_info=True)
+    # Continuamos con un diccionario vacío si hay un error en la carga
 
 # --- Configuración --- (Nombres de variables en inglés)
 REDIS_HOST = os.getenv('REDIS_HOST', 'localhost')
@@ -329,6 +423,9 @@ def detect_mentioned_teams_mvp(text_to_analyze, equipos_dict):
     Detecta equipos mencionados en un texto usando un diccionario de equipos y sus alias.
     Devuelve una lista de nombres canónicos de equipos encontrados.
     La búsqueda de alias es case-insensitive y busca coincidencias como palabras completas.
+    
+    Si se ha activado el contexto específico de partido, dará prioridad a los equipos
+    del partido actual.
     """
     if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
         return []
@@ -338,29 +435,103 @@ def detect_mentioned_teams_mvp(text_to_analyze, equipos_dict):
     text_lower = text_to_analyze.lower()
     found_teams_canonical_names = set()
 
-    # Ordenar los equipos por el alias más largo primero puede ayudar a evitar
-    # que un alias corto (ej. "river") enmascare uno más largo (ej. "river plate").
-    # Pero la lógica interna de los alias ya debería ser ordenada por longitud si es necesario.
-    # Para este MVP, iteramos tal cual y confiamos en una buena definición de alias.
-
+    # Chequeo especial para equipos del contexto si está activado
+    if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+        priority_teams = [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
+        for team_name in priority_teams:
+            if team_name in equipos_dict:
+                for alias in equipos_dict[team_name]:
+                    alias_lower = alias.lower()
+                    try:
+                        pattern = r'\b' + re.escape(alias_lower) + r'\b'
+                        if re.search(pattern, text_lower):
+                            found_teams_canonical_names.add(team_name)
+                            break
+                    except re.error as e:
+                        logging.warning(f"Error de regex para alias '{alias_lower}' del equipo '{team_name}': {e}")
+                        continue
+        
+        # Si ya encontramos equipos en el contexto, retornamos inmediatamente
+        # ya que estos tienen máxima prioridad
+        if found_teams_canonical_names:
+            return list(found_teams_canonical_names)
+    
+    # Procesamiento normal para todos los equipos (o si no se encontraron equipos del contexto)
     for canonical_name, aliases in equipos_dict.items():
         for alias in aliases:
             alias_lower = alias.lower()
-            # Usar expresiones regulares para buscar el alias como palabra completa
-            # re.escape maneja caracteres especiales en el alias si los hubiera
             try:
-                #  asegura que estamos buscando palabras completas
-                # Ejemplo: si alias es "river", no coincidirá con "driver"
                 pattern = r'\b' + re.escape(alias_lower) + r'\b'
                 if re.search(pattern, text_lower):
                     found_teams_canonical_names.add(canonical_name)
-                    break # Si encontramos un alias para este equipo, pasamos al siguiente equipo canónico
+                    break
             except re.error as e:
-                logging.warning(f"Regex error for alias '{alias_lower}' of team '{canonical_name}': {e}")
-                # Continuar con el siguiente alias si hay un error de regex con el actual
+                logging.warning(f"Error de regex para alias '{alias_lower}' del equipo '{canonical_name}': {e}")
                 continue
                 
     return list(found_teams_canonical_names)
+
+def detect_mentioned_players_mvp(text_to_analyze):
+    """
+    Detecta jugadores mencionados en un texto usando el diccionario JUGADORES_MVP.
+    Devuelve una lista de objetos con nombre canónico del jugador y su equipo actual.
+    La búsqueda de alias es case-insensitive y busca coincidencias como palabras completas.
+    
+    Si se ha activado el contexto específico de partido, solo considerará jugadores
+    de los equipos participantes, evitando falsos positivos.
+    """
+    if not isinstance(text_to_analyze, str) or not text_to_analyze.strip():
+        return []
+    if not JUGADORES_MVP:
+        logging.warning("Diccionario JUGADORES_MVP vacío. No es posible la detección de jugadores.")
+        return []
+
+    text_lower = text_to_analyze.lower()
+    found_players = []
+
+    # Verificamos primero si se menciona algún equipo - útil para desambiguación
+    mentioned_teams = detect_mentioned_teams_mvp(text_lower, EQUIPOS_MVP)
+
+    for canonical_name, player_info in JUGADORES_MVP.items():
+        aliases = player_info.get('aliases', [])
+        equipo_actual = player_info.get('equipo_actual', '')
+        
+        # Si estamos en contexto de partido y hay equipos mencionados,
+        # verificamos si este jugador pertenece a alguno de ellos para priorizar
+        if MATCH_CONTEXT_ENABLED and mentioned_teams:
+            # Si el jugador no pertenece a ningún equipo mencionado en el texto,
+            # y tampoco a los equipos del partido, le damos menor prioridad
+            player_team_mentioned = equipo_actual in mentioned_teams
+            player_in_match_teams = equipo_actual in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]
+            
+            if not (player_team_mentioned or player_in_match_teams):
+                continue  # Omitir jugadores que no están en el contexto relevante
+        
+        for alias in aliases:
+            alias_lower = alias.lower()
+            try:
+                pattern = r'\b' + re.escape(alias_lower) + r'\b'
+                if re.search(pattern, text_lower):
+                    # Añadir jugador con su información si no está ya en la lista
+                    player_obj = {
+                        "nombre_canonico": canonical_name,
+                        "equipo": equipo_actual
+                    }
+                    if player_obj not in found_players:  # Evitar duplicados
+                        found_players.append(player_obj)
+                    break  # Si ya encontramos un alias para este jugador, pasamos al siguiente
+            except re.error as e:
+                logging.warning(f"Error de regex para alias '{alias_lower}' del jugador '{canonical_name}': {e}")
+                continue
+    
+    # Desambiguación: si tenemos jugadores de diferentes equipos y algunos son del contexto del partido,
+    # y otros no, priorizamos los del partido
+    if MATCH_CONTEXT_ENABLED and found_players and len(found_players) > 1:
+        match_team_players = [p for p in found_players if p.get('equipo') in [MATCH_HOME_TEAM, MATCH_AWAY_TEAM]]
+        if match_team_players:
+            return match_team_players
+    
+    return found_players
 
 def process_message(message_id, message_data):
     """Procesa un único mensaje del stream: deserializa, valida y enriquece."""
@@ -368,7 +539,7 @@ def process_message(message_id, message_data):
         # El payload del mensaje es una cadena JSON
         comment_payload_str = message_data.get('payload')
         if not comment_payload_str:
-            logging.warning(f"Message {message_id} has no 'payload' field. Skipping.")
+            logging.warning(f"Mensaje {message_id} no tiene campo 'payload'. Omitiendo.")
             return None
 
         comment_dict = json.loads(comment_payload_str)
@@ -376,7 +547,7 @@ def process_message(message_id, message_data):
         # Validar campos esperados
         missing_fields = [field for field in EXPECTED_FIELDS if field not in comment_dict]
         if missing_fields:
-            logging.warning(f"Message {message_id} (source_comment_id: {comment_dict.get('source_comment_id', 'N/A')}) is missing fields: {missing_fields}. Skipping.")
+            logging.warning(f"Mensaje {message_id} (source_comment_id: {comment_dict.get('source_comment_id', 'N/A')}) le faltan campos: {missing_fields}. Omitiendo.")
             return None
 
         # Enriquecimiento
@@ -400,14 +571,30 @@ def process_message(message_id, message_data):
             comment_dict["mentioned_teams"] = [] # Default si no hay texto
         # --- Fin Detección de Equipos ---
 
-        logging.info(f"Successfully processed message {message_id} (internal_id: {comment_dict['internal_comment_id']})")
+        # --- Detección de Jugadores MVP ---
+        if comment_dict["cleaned_text"]:
+            mentioned_players = detect_mentioned_players_mvp(comment_dict["cleaned_text"])
+            comment_dict["mentioned_players"] = mentioned_players
+        else:
+            comment_dict["mentioned_players"] = [] # Default si no hay texto
+        # --- Fin Detección de Jugadores ---
+
+        # --- Información del Contexto (si está habilitado) ---
+        if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+            comment_dict["match_context"] = {
+                "home_team": MATCH_HOME_TEAM,
+                "away_team": MATCH_AWAY_TEAM
+            }
+        # --- Fin Información del Contexto ---
+
+        logging.info(f"Mensaje {message_id} procesado exitosamente (internal_id: {comment_dict['internal_comment_id']})")
         return comment_dict
 
     except json.JSONDecodeError as e:
-        logging.error(f"Error decoding JSON for message {message_id}: {e}. Payload: {comment_payload_str[:200]}... Skipping.")
+        logging.error(f"Error al decodificar JSON para mensaje {message_id}: {e}. Payload: {comment_payload_str[:200]}... Omitiendo.")
         return None
     except Exception as e:
-        logging.error(f"Unexpected error processing message {message_id}: {e}", exc_info=True)
+        logging.error(f"Error inesperado al procesar mensaje {message_id}: {e}", exc_info=True)
         return None
 
 def consume_and_process_comments(redis_client, stream_name, group_name, consumer_name):
@@ -477,6 +664,14 @@ def consume_and_process_comments(redis_client, stream_name, group_name, consumer
             time.sleep(5)
 
 if __name__ == "__main__":
+    # Imprimir información del contexto del partido al inicio
+    if MATCH_CONTEXT_ENABLED and MATCH_HOME_TEAM and MATCH_AWAY_TEAM:
+        logging.info(f"Procesador iniciado en modo CONTEXTO DE PARTIDO: {MATCH_HOME_TEAM} vs {MATCH_AWAY_TEAM}")
+        logging.info(f"Equipos cargados: {len(EQUIPOS_MVP)}, Jugadores cargados: {len(JUGADORES_MVP)}")
+    else:
+        logging.info("Procesador iniciado en modo GENERAL (sin contexto específico de partido)")
+        logging.info(f"Equipos cargados: {len(EQUIPOS_MVP)}, Jugadores cargados: {len(JUGADORES_MVP)}")
+    
     redis_conn = connect_to_redis(REDIS_HOST, REDIS_PORT)
 
     if redis_conn:
