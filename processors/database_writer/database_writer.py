@@ -2,6 +2,7 @@ import redis
 import os
 import json
 import logging
+import logging.handlers
 import time
 from datetime import datetime
 from dotenv import load_dotenv
@@ -85,10 +86,39 @@ def create_consumer_group(redis_client, stream_name, group_name):
 def store_comment(supabase_client, comment_data):
     """Almacena un comentario y sus datos relacionados en Supabase"""
     try:
-        # 1. Insertar el comentario principal
+        # 1. Primero buscar o crear el evento en la tabla events
+        event_uuid = comment_data['event_uuid']
+        
+        # Buscar si el evento ya existe
+        event_query = supabase_client.table('events').select('id').eq('event_uuid', event_uuid).execute()
+        
+        if event_query.data and len(event_query.data) > 0:
+            # El evento ya existe, usar su ID
+            event_id = event_query.data[0]['id']
+            logging.debug(f"Evento encontrado con ID: {event_id}")
+        else:
+            # El evento no existe, crearlo
+            match_context = comment_data.get('match_context', {})
+            event_result = supabase_client.table('events').insert({
+                'event_uuid': event_uuid,
+                'stream_id': comment_data['stream_id'],
+                'home_team': match_context.get('home_team'),
+                'away_team': match_context.get('away_team'),
+                'event_date': comment_data['capture_timestamp_utc']
+            }).execute()
+            
+            if not event_result.data or len(event_result.data) == 0:
+                logging.error(f"No se pudo crear el evento: {event_result}")
+                return None
+                
+            event_id = event_result.data[0]['id']
+            logging.info(f"Evento creado con ID: {event_id}")
+        
+        # 2. Insertar el comentario principal con la referencia al evento
         comment_result = supabase_client.table('comments').insert({
             'internal_comment_id': comment_data['internal_comment_id'],
             'source_comment_id': comment_data.get('source_comment_id'),
+            'event_id': event_id,  # Usar el ID del evento, no el UUID
             'event_uuid': comment_data['event_uuid'],
             'stream_id': comment_data['stream_id'],
             'platform_source': comment_data['platform_source'],
@@ -112,7 +142,7 @@ def store_comment(supabase_client, comment_data):
         comment_id = comment_result.data[0]['id']
         logging.info(f"Comentario insertado con ID: {comment_id}")
         
-        # 2. Insertar menciones de equipos
+        # 3. Insertar menciones de equipos
         for team in comment_data.get('mentioned_teams', []):
             try:
                 team_result = supabase_client.table('mentioned_teams').insert({
@@ -123,7 +153,7 @@ def store_comment(supabase_client, comment_data):
             except Exception as e:
                 logging.error(f"Error al insertar mención de equipo {team['name']}: {e}")
         
-        # 3. Insertar menciones de jugadores
+        # 4. Insertar menciones de jugadores
         for player in comment_data.get('mentioned_players', []):
             try:
                 player_result = supabase_client.table('mentioned_players').insert({
