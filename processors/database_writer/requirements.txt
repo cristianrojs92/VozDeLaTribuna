@@ -1,0 +1,4 @@
+redis==4.5.5
+python-dotenv==1.0.0
+supabase==1.0.3
+python-dateutil==2.8.2

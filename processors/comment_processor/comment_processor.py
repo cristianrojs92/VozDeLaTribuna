@@ -751,7 +751,7 @@ def detect_mentioned_players_mvp(text_to_analyze):
         logging.error(f"Error general en detect_mentioned_players_mvp: {e}", exc_info=True)
         return []  # En caso de error, devolver una lista vacía
 
-def process_message(message_id, message_data):
+def process_message(message_id, message_data, redis_client=None):
     """Procesa un único mensaje del stream: deserializa, valida y enriquece."""
     try:
         msg_id_str = message_id.decode() if isinstance(message_id, bytes) else message_id
@@ -859,6 +859,25 @@ def process_message(message_id, message_data):
         # --- Fin Información del Contexto ---
 
         logging.info(f"✅ Mensaje {msg_id_str} procesado exitosamente (internal_id: {comment_dict['internal_comment_id']})")
+        
+        # Enviar el comentario procesado a un nuevo stream para que sea consumido por database_writer
+        try:
+            # Serializar el comentario procesado
+            processed_json = json.dumps(comment_dict)
+            
+            # Enviarlo a un nuevo stream para que sea consumido por el database_writer
+            processed_stream_name = os.getenv('REDIS_PROCESSED_STREAM', 'comment_stream:processed')
+            processed_message_id = redis_client.xadd(processed_stream_name, {'payload': processed_json})
+            
+            # Convertir a string si es bytes
+            if isinstance(processed_message_id, bytes):
+                processed_message_id = processed_message_id.decode('utf-8')
+                
+            logging.info(f"📤 Comentario procesado enviado a stream {processed_stream_name}: {processed_message_id}")
+        except Exception as e:
+            logging.error(f"❌ Error al enviar comentario procesado a Redis: {e}", exc_info=True)
+            # El error no es crítico, continuamos con el procesamiento
+        
         return comment_dict
 
     except json.JSONDecodeError as e:
@@ -912,7 +931,8 @@ def consume_and_process_comments(redis_client, stream_name, group_name, consumer
                     
                     try:
                         # Procesamos el mensaje con un tiempo límite implícito (sin bloquear el loop principal)
-                        enriched_comment = process_message(message_id, message_data)
+                        # Pasamos el cliente redis a la función process_message para que pueda enviar al stream
+                        enriched_comment = process_message(message_id, message_data, redis_client)
 
                         if enriched_comment:
                             # Formatear el comentario enriquecido como JSON con indentación
